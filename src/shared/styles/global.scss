@@ -1,0 +1,45 @@
+@forward './reset/index';
+@forward './layout';
+
+.not-found {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #fff8f2, #fff3e6); // 은은한 오렌지 배경
+  color: #333;
+  text-align: center;
+  font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
+
+  h1 {
+    font-size: 120px;
+    line-height: 120px;
+    font-weight: 900;
+    margin: 0;
+    color: #ff6a00;
+    text-shadow: 2px 2px 6px rgba(255, 106, 0, 0.3);
+  }
+
+  p {
+    font-size: 14px;
+    margin-top: 12px;
+    color: #666;
+  }
+
+  a {
+    margin-top: 24px;
+    font-size: 14px;
+    color: #ff6a00;
+    border: 1px solid #ff6a00;
+    padding: 8px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: #ff6a00;
+      color: #fff;
+    }
+  }
+}

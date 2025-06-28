@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+$font-family-base:
+  'Noto Sans',
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  Roboto,
+  Oxygen,
+  Ubuntu,
+  Cantarell,
+  'Open Sans',
+  'Helvetica Neue',
+  sans-serif;
+$font-family-heading: $font-family-base;
+
+$min-width: 1272px;
+$empty-min-width: 1400px;
+
+$font-h1: 32px; // line-height: 48px
+$font-h2: 24px; // line-height: 36px
+$font-h3: 20px; // line-height: 30px
+$font-h4: 16px; // line-height: 24px
+$font-h5: 14px; // line-height: 20px
+
+$font-body-strong: 14px; // line-height: 20px
+$font-body-primary: 14px; // line-height: 20px
+$font-body-secondary: 14px; // line-height: 20px
+$font-footnote-primary: 12px;
+$font-footnote-secondary: 12px;
+
+$font-button-large: 16px; // line-height: 24px
+$font-button-default: 14px; // line-height: 20px
+$font-hyperlink: 14px; // inline
+$font-label: 12px;
+
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$line-height-xxl: 48px;
+$line-height-xl: 36px;
+$line-height-lg: 30px;
+$line-height-md: 24px;
+$line-height-sm: 20px;
+$line-height-xs: 12px;

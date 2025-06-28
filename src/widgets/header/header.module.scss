@@ -1,0 +1,105 @@
+@use '@/shared/styles/variables/index' as *;
+
+.header {
+  min-width: 1272px;
+  border-bottom: 1px solid $border-light;
+  .box {
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1272px;
+    height: 64px;
+    h1 {
+      margin: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      font-size: $font-footnote-primary;
+      font-weight: $font-weight-normal;
+      line-height: $line-height-sm;
+      color: $text-secondary;
+      p {
+        position: absolute;
+        top: 22px;
+        left: 37px;
+        margin: 0;
+      }
+    }
+    nav {
+      display: flex;
+      gap: 20px;
+      ul {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        li {
+          a {
+            position: relative;
+            font-size: $font-button-large;
+            height: 64px;
+            display: flex;
+            align-items: center;
+          }
+          &.on {
+            a {
+              color: $primary;
+              &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background-color: $primary;
+              }
+            }
+          }
+        }
+      }
+    }
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      .setting {
+        margin-left: 8px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+      .user {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        color: $text-secondary;
+        font-size: $font-h3;
+        font-weight: $font-weight-semibold;
+        background-color: $neutrals-divider-grey;
+      }
+    }
+  }
+}
+.userDropdown {
+  ul {
+    padding: 4px 0 !important;
+    width: 120px;
+  }
+}
+.settingDropdown {
+  ul {
+    padding: 4px 0 !important;
+    width: 200px;
+    li {
+      :global(.anticon) {
+        padding-right: 8px;
+        font-size: 16px;
+        transform: translateY(2px);
+      }
+    }
+  }
+}
+.uploadIcon {
+  stroke-width: 30;
+  stroke: currentColor;
+}

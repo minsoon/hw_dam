@@ -1,0 +1,183 @@
+@use '@/shared/styles/variables/index' as *;
+
+.searchBanner {
+  padding-top: 48px;
+  dl {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 280px;
+    border-radius: 8px;
+    background: url('/images/bg_search.png') no-repeat 0 30% / 100% auto;
+    dt {
+      padding-bottom: 24px;
+      color: $text-white;
+      font-size: $font-h1;
+      line-height: $line-height-xxl;
+      letter-spacing: 0;
+    }
+    dd {
+      display: flex;
+      margin: 0;
+      gap: 8px;
+      .input {
+        display: flex;
+        border-radius: 4px;
+        background-color: $bg-surface-100;
+        .btnType {
+          position: relative;
+          padding: 4px;
+          min-width: 248px;
+          label {
+            width: 120px;
+            height: 40px;
+            font-size: $font-button-large;
+            text-align: center;
+            border: 0;
+            border-radius: 4px;
+            line-height: 40px;
+            &::before {
+              display: none;
+            }
+          }
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 1px;
+            height: 100%;
+            background-color: $border-light;
+          }
+        }
+      }
+      .inputSearch {
+        input {
+          width: 490px;
+          height: 32px;
+        }
+      }
+      .btnSearch {
+        width: 100px;
+        height: 48px;
+        font-size: $font-button-large;
+      }
+    }
+  }
+}
+
+.assetGallery {
+  padding-bottom: 48px;
+  .box {
+    position: relative;
+    padding-top: 53px;
+    .title {
+      padding-bottom: 20px;
+      font-size: $font-h3;
+      line-height: $line-height-lg;
+    }
+    .list {
+      position: relative;
+      :global {
+        .slick-list {
+          margin: 0 -10px;
+        }
+        .slick-slide {
+          padding: 0 7.5px;
+        }
+      }
+    }
+    .noData {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 212px;
+      color: $text-secondary;
+      border-radius: 4px;
+      background-color: $bg-surface-200;
+    }
+    .btn {
+      position: absolute;
+      top: -50px;
+      right: 0;
+      display: flex;
+      gap: 4px;
+      button {
+        width: 40px;
+        height: 40px;
+        :global(.anticon) {
+          font-size: $font-button-default;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+.dataTypeSearch {
+  dl {
+    display: flex;
+    height: 272px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    dt {
+      padding-bottom: 24px;
+      font-size: $font-h2;
+      line-height: $line-height-xl;
+      color: $text-white;
+    }
+    dd {
+      text-align: center;
+      span {
+        margin: 4px;
+        padding: 10px 12px;
+        display: inline-block;
+        border-radius: 4px;
+        background-color: #fff;
+      }
+    }
+  }
+}
+
+.recentItems {
+  padding-top: 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  .box {
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    > dl {
+      > dt {
+        padding: 0 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 62px;
+        font-size: $font-h4;
+        font-weight: $line-height-md;
+        border-bottom: 1px solid $border-light;
+        button {
+          text-decoration: underline;
+          :global(.anticon) {
+            font-size: $font-button-default;
+            font-weight: bold;
+            color: $primary;
+          }
+        }
+      }
+    }
+    .noData {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 212px;
+      color: $text-secondary;
+      border-radius: 4px;
+      background-color: $bg-surface-200;
+    }
+  }
+}

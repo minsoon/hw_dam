@@ -1,0 +1,23 @@
+@use '@/shared/styles/variables/index' as *;
+
+.tabSelector {
+  display: flex;
+  .tabGroup {
+    display: flex;
+    gap: 8px;
+    :global(.ant-radio-button-wrapper) {
+      border-radius: 40px;
+      background-color: white !important;
+      color: black !important;
+      border: 0 !important;
+      transition: all 0.2s;
+      &::before {
+        display: none;
+      }
+    }
+    :global(.ant-radio-button-wrapper-checked) {
+      background-color: black !important;
+      color: white !important;
+    }
+  }
+}

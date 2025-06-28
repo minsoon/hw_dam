@@ -1,0 +1,81 @@
+@use '@/shared/styles/variables/index' as *;
+
+.dropdown {
+  ul {
+    padding: 4px 0 !important;
+    width: 320px;
+    border-radius: 4px !important;
+    li {
+      :global(.anticon) {
+        display: none;
+        font-size: 14px;
+      }
+      .versionItem {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        dl {
+          dt {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            color: $text-primary;
+            span {
+              display: inline-block;
+              padding: 0 6px 2px 6px;
+              font-size: $font-label;
+              line-height: 16px;
+              color: $text-white;
+              border-radius: 20px;
+              background-color: $bg-surface-800;
+            }
+          }
+          dd {
+            display: flex;
+            gap: 8px;
+            font-size: $font-label;
+            color: $text-secondary;
+            span {
+              position: relative;
+              padding-left: 9px;
+              &::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 50%;
+                width: 1px;
+                height: 12px;
+                background-color: $bg-surface-300;
+                transform: translateY(-50%);
+              }
+              &:first-child {
+                padding-left: 0;
+                &::after {
+                  display: none;
+                }
+              }
+            }
+          }
+        }
+        :global(.anticon) {
+          display: none;
+        }
+      }
+    }
+  }
+  :global(.ant-dropdown-menu-item) {
+    border-radius: 0 !important;
+  }
+  :global(.ant-dropdown-menu-item-selected) {
+    // background-color: $bg-surface-200 !important;
+    .versionItem {
+      :global(.anticon) {
+        // color: $text-primary !important;
+        display: block;
+      }
+    }
+  }
+  :global(.ant-dropdown-menu-item-selected.ant-dropdown-menu-item-active) {
+    background-color: #fff7ed !important;
+  }
+}

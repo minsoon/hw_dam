@@ -1,0 +1,40 @@
+@use '@/shared/styles/variables/index' as *;
+
+// .sort {
+//   display: flex !important;
+//   flex-direction: row-reverse;
+//   width: 165px;
+//   height: 40px !important;
+//   :global(.ant-select-selector) {
+//     text-align: right;
+//   }
+//   :global(.ant-select-selection-item) {
+//     padding-inline-end: 0 !important;
+//     padding-inline-start: 18px !important;
+//   }
+// }
+.sort {
+  position: relative;
+  width: 170px !important;
+  height: 40px !important;
+
+  :global(.ant-select-arrow) {
+    inset-inline-start: 15px !important;
+    color: #000 !important
+    ;
+  }
+
+  :global(.ant-select-selector) {
+    padding-left: 34px !important;
+  }
+
+  :global(.ant-select-selection-item) {
+    padding-inline-start: 0 !important;
+    padding-inline-end: 0 !important;
+  }
+}
+
+// .selectDropdown {
+//   :global(.ant-select-item) {
+//   }
+// }

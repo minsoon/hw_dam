@@ -1,0 +1,20 @@
+@use '@/shared/styles/variables/index' as *;
+
+.fileUploader {
+  padding: 32px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploaderEdit {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 32px 48px;
+  width: 100%;
+  min-width: $empty-min-width;
+  overflow: hidden;
+}

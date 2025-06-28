@@ -1,0 +1,145 @@
+@use '@/shared/styles/variables/index' as *;
+
+@mixin cardBox() {
+  padding: 20px;
+  border: 1px solid $border-light;
+  border-radius: 4px;
+  .title {
+    padding-bottom: 16px;
+    font-size: $font-h4;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+  }
+  dl {
+    dt {
+      padding-bottom: 8px;
+      font-size: $font-footnote-primary;
+      color: $text-secondary;
+    }
+  }
+}
+
+.upsert {
+  margin: 0 auto;
+  width: $min-width;
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+  .generalSetting {
+    @include cardBox;
+    width: 410px;
+    .form {
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid $border-light;
+      dl {
+        dd {
+          padding-bottom: 16px;
+          textarea {
+            height: 100px;
+          }
+        }
+        &:last-child {
+          dd {
+            padding-bottom: 0;
+          }
+        }
+      }
+    }
+    .assetTypeIcon {
+      dl {
+        dd {
+          .uploadButton {
+            padding: 0 10px 0 15px;
+            width: 100%;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid $border-light;
+            border-radius: 4px;
+          }
+          .uploadIcon {
+            padding: 0 10px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid $border-light;
+            border-radius: 4px;
+            background-color: $bg-surface-200;
+            .iconInfo {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              img {
+                width: 40px;
+                height: 40px;
+              }
+              .iconInfoText {
+                padding-top: 4px;
+                font-size: $font-footnote-primary;
+                p {
+                  line-height: 14px;
+                }
+                span {
+                  color: $text-secondary;
+                  line-height: 14px;
+                }
+              }
+            }
+          }
+        }
+      }
+      .uploadLimit {
+        padding-top: 6px;
+        font-size: $font-footnote-primary;
+        color: $text-secondary;
+      }
+    }
+  }
+  .customVariations {
+    @include cardBox;
+    flex: 1;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
+      thead {
+        tr {
+          th {
+            padding-bottom: 5px;
+            padding-left: 5px;
+            text-align: left;
+            font-size: $font-footnote-primary;
+            color: $text-secondary;
+            font-weight: $font-weight-semibold;
+          }
+        }
+      }
+      tbody {
+        tr {
+          th {
+            text-align: center;
+            .dragHandle {
+              cursor: grab;
+              &:active {
+                cursor: grabbing;
+              }
+            }
+          }
+          td {
+            padding: 4px;
+            :global(.ant-select-selection-item) {
+              font-size: $font-label;
+              height: 25px;
+              line-height: 23px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

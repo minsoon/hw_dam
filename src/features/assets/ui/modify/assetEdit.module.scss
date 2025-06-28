@@ -1,0 +1,60 @@
+@use '@/shared/styles/variables/index' as *;
+
+.assetInfo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 356px;
+  height: 100%;
+  min-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid $border-light;
+  background-color: $bg-surface-100;
+  .title {
+    padding: 0 20px;
+    width: 100%;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: $font-h4;
+    box-shadow: 0px 0px 20px 0px #0000001a;
+    background-color: $bg-surface-100;
+    dl {
+      padding: 20px 0;
+      dt {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        span {
+          padding: 0 6px 2px 6px;
+          font-size: $font-label;
+          border: 1px solid $border-light;
+          border-radius: 12px;
+        }
+      }
+      dd {
+        font-size: $font-label;
+        color: $text-secondary;
+      }
+    }
+  }
+  .info {
+    padding: 20px;
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    .collapse {
+      background-color: $bg-surface-100;
+      :global(.ant-collapse-header) {
+        padding: 0;
+        align-items: center;
+        height: 57px;
+      }
+      :global(.ant-collapse-content-box) {
+        padding: 0 0 16px 0;
+      }
+    }
+  }
+}

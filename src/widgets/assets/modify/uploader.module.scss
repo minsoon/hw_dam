@@ -1,0 +1,10 @@
+@use '@/shared/styles/variables/index' as *;
+
+.assetModify {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-width: $empty-min-width;
+  overflow: hidden;
+}

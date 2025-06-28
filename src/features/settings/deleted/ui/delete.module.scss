@@ -1,0 +1,70 @@
+@use '@/shared/styles/variables/index' as *;
+
+.imageTitle {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  dl {
+    dd {
+      color: $text-secondary;
+      font-size: $font-label;
+    }
+  }
+  p {
+    .master {
+      margin-left: 8px;
+      padding: 0 8px 1px 8px;
+      display: inline-block;
+      color: $text-white;
+      font-size: $font-label;
+      background-color: $bg-surface-800;
+      border-radius: 22px;
+    }
+  }
+  .fileImage {
+    width: 100px;
+    height: 64px;
+    background: no-repeat center / cover;
+
+    &.notImage {
+      background-color: $bg-surface-200;
+      background-size: 40% auto;
+    }
+  }
+  .collectionImage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      'left top-right'
+      'left bottom-right';
+    p {
+      grid-area: left;
+      width: 50px;
+      background: no-repeat center / cover;
+
+      &.notImage {
+        background-color: $bg-surface-200;
+        background-size: 40% auto;
+      }
+      &:nth-child(2),
+      &:nth-child(3) {
+        height: 32px;
+      }
+      &:nth-child(2) {
+        grid-area: top-right;
+      }
+      &:nth-child(3) {
+        grid-area: bottom-right;
+      }
+    }
+  }
+  .fileIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 64px;
+    background: $bg-surface-200 url('/images/icon_file.svg') no-repeat center / 20px;
+  }
+}

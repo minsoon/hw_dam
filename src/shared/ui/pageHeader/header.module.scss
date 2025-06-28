@@ -1,0 +1,129 @@
+@use '@/shared/styles/variables/index' as *;
+
+.pageHeader {
+  background-color: $bg-surface-200;
+  .fixWidth {
+    margin: 0 auto;
+    padding: 16px 0;
+    width: $min-width;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .flexStart {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      justify-content: space-between;
+      h2 {
+        font-size: $font-h3;
+        font-weight: $font-weight-medium;
+        line-height: $line-height-lg;
+      }
+    }
+    .flexEnd {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+}
+
+.pathHeader {
+  background-color: $bg-surface-200;
+  border-bottom: 1px solid $border-light;
+  .fixWidth {
+    margin: 0 auto;
+    width: $min-width;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .title {
+      dl {
+        dt {
+          padding-bottom: 8px;
+          color: $text-secondary;
+          text-decoration: underline;
+        }
+        dd {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: $font-h2;
+          p {
+            display: inline-block;
+            font-size: $font-label;
+            color: $text-white;
+            background-color: $neutrals-block;
+            padding: 1px 8px;
+            border-radius: 22px;
+          }
+        }
+      }
+    }
+    .flexEnd {
+      padding-top: 30px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  &.shareHeader {
+    .fixWidth {
+      padding: 0 16px;
+      display: flex;
+      width: 100%;
+      min-width: $min-width;
+      height: 64px;
+      .title {
+        display: flex;
+        align-items: center;
+        .closeButton {
+          position: relative;
+          margin-right: 16px;
+          padding-right: 16px;
+          font-size: 18px;
+          &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 1px;
+            height: 24px;
+            background-color: $bg-surface-300;
+            transform: translateY(-50%);
+          }
+        }
+        dl {
+          dt {
+            display: none;
+            padding-bottom: 4px;
+            font-size: $font-label;
+          }
+          dd {
+            font-size: $font-h5;
+          }
+        }
+      }
+      .flexEnd {
+        padding-top: 0;
+      }
+    }
+  }
+  &.darkHeader {
+    border-bottom: 1px solid $neutrals-medium-grey;
+    background-color: $bg-surface-800;
+    color: $text-white;
+    .title {
+      .closeButton {
+        button {
+          color: $text-white;
+        }
+        &::after {
+          background-color: $neutrals-medium-grey !important;
+        }
+      }
+    }
+  }
+}

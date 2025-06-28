@@ -1,0 +1,249 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import type { CheckboxChangeEvent } from 'antd'
+import { useAssetUpdateStore } from '@/features/assets/model/assetUpdateStore'
+import { PanelItemsProps } from '@/shared/types/editPanel'
+
+export const useAssetEditPanel = () => {
+  const { asset, setAsset } = useAssetUpdateStore()
+  const version = asset?.current_version
+
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const [isConfidential, setIsConfidential] = useState(false)
+
+  useEffect(() => {
+    if (!version) return
+    setName(version.asset_name)
+    setDescription(version.description)
+    setIsConfidential(version.is_confidential === 1)
+  }, [version])
+
+  const handleBlur = useCallback(() => {
+    if (!version) return
+    setAsset({
+      ...asset,
+      current_version: {
+        ...version,
+        asset_name: name,
+        description,
+      },
+    })
+  }, [name, description, version, setAsset, asset])
+
+  const handleConfidential = useCallback(
+    (e: CheckboxChangeEvent) => {
+      if (!version) return
+
+      setAsset({
+        ...asset,
+        current_version: {
+          ...version,
+          is_confidential: e.target.checked ? 1 : 0,
+        },
+      })
+    },
+    [asset, setAsset, version]
+  )
+
+  return {
+    name,
+    setName,
+    description,
+    setDescription,
+    isConfidential,
+    handleConfidential,
+    handleBlur,
+  }
+}
+
+export const useAssetTagPanel = (panelId: number, data: PanelItemsProps['data']) => {
+  const { asset, setAsset } = useAssetUpdateStore()
+
+  const [inputValue, setInputValue] = useState('')
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [showToggleButton, setShowToggleButton] = useState(false)
+  const tagListRef = useRef<HTMLDivElement>(null)
+
+  const handleTagClick = (key: number) => {
+    if (!asset || !('tags' in asset)) return
+    const updatedTags = asset.tags.map(tag => ({
+      ...tag,
+      parent_tag_id: tag.tag_id,
+      child_tags: tag.child_tags
+        .filter(child => {
+          // @ts-expect-error - is_new property exists in runtime but not in type definition
+          if (child.tag_id === key && child.is_new === 1 && child.is_selected === 1) {
+            return false
+          }
+          return true
+        })
+        .map(child => {
+          // @ts-expect-error - is_new property exists in runtime but not in type definition
+          if (child.tag_id === key && child.is_new !== 1) {
+            return {
+              ...child,
+              is_selected: child.is_selected === 1 ? 0 : 1,
+            }
+          }
+          return child
+        }),
+    }))
+    setAsset({ ...asset, tags: updatedTags })
+  }
+
+  const handleAddTag = () => {
+    if (!asset || inputValue.trim() === '' || !('tags' in asset)) return
+
+    const input = inputValue.trim()
+    const updatedTags = asset.tags.map(tag => {
+      if (tag.tag_id !== panelId) return { ...tag, parent_tag_id: tag.tag_id }
+
+      const matched = tag.child_tags.find(child => child.tag_name.toLowerCase() === input.toLowerCase())
+
+      if (matched) {
+        return {
+          ...tag,
+          child_tags: tag.child_tags.map(child =>
+            child.tag_name.toLowerCase() === input.toLowerCase() ? { ...child, is_selected: 1 } : child
+          ),
+        }
+      }
+
+      return {
+        ...tag,
+        child_tags: [
+          ...tag.child_tags,
+          {
+            tag_id: new Date().getTime() * Math.random(),
+            tag_name: input,
+            parent_tag_id: tag.tag_id,
+            is_selected: 1,
+            is_new: 1,
+          },
+        ],
+      }
+    })
+
+    setAsset({ ...asset, tags: updatedTags })
+    setInputValue('')
+  }
+
+  useEffect(() => {
+    const el = tagListRef.current
+    if (el) {
+      const height = el.scrollHeight
+      setShowToggleButton(height > 54)
+    }
+  }, [data, asset])
+
+  return {
+    panelData: asset,
+    inputValue,
+    setInputValue,
+    isExpanded,
+    setIsExpanded,
+    showToggleButton,
+    tagListRef,
+    handleTagClick,
+    handleAddTag,
+  }
+}
+
+export const useAssetRadioPanel = (panel: PanelItemsProps) => {
+  const { asset, setAsset } = useAssetUpdateStore()
+
+  const selected = useMemo(() => {
+    const matchedProperty = asset?.properties.find(p => p.property_category_id === panel.id)
+    return matchedProperty?.options.find(opt => opt.is_selected === 1)
+  }, [asset, panel.id])
+
+  const handleChange = (selectedId: number) => {
+    if (!asset) return
+    const updatedProperties = asset.properties?.map(property => {
+      if (property.property_category_id !== panel.id) return property
+      return {
+        ...property,
+        options: property.options.map(option => ({
+          ...option,
+          is_selected: option.property_option_id === selectedId ? 1 : 0,
+        })),
+      }
+    })
+    setAsset({ ...asset, properties: updatedProperties })
+  }
+
+  return { panelData: asset, selected, handleChange }
+}
+
+export const useAssetCheckboxPanel = (panel: PanelItemsProps) => {
+  const { asset, setAsset } = useAssetUpdateStore()
+
+  const selectedIds = useMemo(() => {
+    const matchedProperty = asset?.properties?.find(property => property.property_category_id === panel.id)
+    return (
+      matchedProperty?.options
+        .filter(option => option.is_selected === 1)
+        .map(option => option.property_option_id.toString()) ?? []
+    )
+  }, [asset, panel.id])
+
+  const handleChange = (checkedValues: string[]) => {
+    if (!asset) return
+    const updatedProperties = asset.properties?.map(property => {
+      if (property.property_category_id !== panel.id) return property
+
+      return {
+        ...property,
+        options: property.options.map(option => ({
+          ...option,
+          is_selected: checkedValues.includes(option.property_option_id.toString()) ? 1 : 0,
+        })),
+      }
+    })
+
+    setAsset({ ...asset, properties: updatedProperties })
+  }
+
+  return { panelData: asset, selectedIds, handleChange }
+}
+export const useAssetContactsPanel = () => {
+  const { asset, setAsset } = useAssetUpdateStore()
+
+  const handleChange = (field: string, value: string | number) => {
+    if (!asset) return
+    setAsset({
+      ...asset,
+      current_version: {
+        ...asset?.current_version,
+        [field]: value,
+      },
+    })
+  }
+  return { asset: asset?.current_version, handleChange }
+}
+
+export const useAssetCopyrightPanel = () => {
+  const { asset, setAsset } = useAssetUpdateStore()
+
+  const [copyrightText, setCopyrightText] = useState('')
+  const handleBlur = () => {
+    if (!asset) return
+    if (copyrightText !== asset.current_version.copyright) {
+      setAsset({
+        ...asset,
+        current_version: {
+          ...asset.current_version,
+          copyright: copyrightText,
+        },
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (asset?.current_version?.copyright) {
+      setCopyrightText(asset.current_version.copyright)
+    }
+  }, [asset?.current_version?.copyright])
+
+  return { copyrightText, setCopyrightText, handleBlur }
+}

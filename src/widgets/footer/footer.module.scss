@@ -1,0 +1,10 @@
+@use '@/shared/styles/variables/index' as *;
+
+.footer {
+  margin: 48px auto auto;
+  display: flex;
+  align-items: center;
+  width: $min-width;
+  height: 68px;
+  color: $neutrals-medium-grey;
+}

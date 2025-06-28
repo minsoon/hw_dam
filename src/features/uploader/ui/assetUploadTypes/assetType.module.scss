@@ -1,0 +1,31 @@
+@use '@/shared/styles/variables/index' as *;
+
+button.assetType {
+  padding: 0 20px 0 16px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  .btn {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    .image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background-color: $primary;
+    }
+    p {
+      font-size: $font-h4;
+    }
+    :global(.anticon) {
+      color: $secondary-medium;
+      font-size: 16px;
+    }
+  }
+}

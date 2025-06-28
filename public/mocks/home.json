@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "image": "/images/img_thumbnail0.png",
+    "title": "Photography collection 2024",
+    "type": "Image",
+    "tag": "12 files",
+    "hidden": false
+  },
+  {
+    "id": 2,
+    "image": "/images/img_thumbnail1.png",
+    "title": "Brand identity assets",
+    "type": "Vector",
+    "tag": "8 files",
+    "hidden": true
+  },
+  {
+    "id": 3,
+    "image": "/images/img_thumbnail2.png",
+    "title": "Marketing campaign visuals",
+    "type": "Image",
+    "tag": "24 files",
+    "hidden": false
+  },
+  {
+    "id": 4,
+    "image": "/images/img_thumbnail0.png",
+    "title": "Product showcase materials",
+    "type": "Video",
+    "tag": "5 files",
+    "hidden": false
+  },
+  {
+    "id": 5,
+    "image": "/images/img_thumbnail1.png",
+    "title": "Website design components",
+    "type": "UI",
+    "tag": "32 files",
+    "hidden": true
+  },
+  {
+    "id": 6,
+    "image": "/images/img_thumbnail2.png",
+    "title": "Annual report graphics",
+    "type": "PDF",
+    "tag": "3 files",
+    "hidden": false
+  },
+  {
+    "id": 7,
+    "image": "/images/img_thumbnail0.png",
+    "title": "Social media toolkit",
+    "type": "Template",
+    "tag": "18 files",
+    "hidden": false
+  },
+  {
+    "id": 8,
+    "image": "/images/img_thumbnail1.png",
+    "title": "Event promotional materials",
+    "type": "Mixed",
+    "tag": "15 files",
+    "hidden": true
+  },
+  {
+    "id": 9,
+    "image": "/images/img_thumbnail2.png",
+    "title": "Company presentation deck",
+    "type": "Slideshow",
+    "tag": "42 files",
+    "hidden": false
+  },
+  {
+    "id": 10,
+    "image": "/images/img_thumbnail0.png",
+    "title": "Product photography archive",
+    "type": "Image",
+    "tag": "64 files",
+    "hidden": true
+  }
+]

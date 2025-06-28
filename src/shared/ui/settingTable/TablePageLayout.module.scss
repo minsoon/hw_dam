@@ -1,0 +1,28 @@
+@use '@/shared/styles/variables/index' as *;
+
+.tablePage {
+  padding-top: 24px;
+  .count {
+    padding-bottom: 20px;
+  }
+  .table {
+    padding-bottom: 20px;
+    border-top: 1px solid $border-light;
+    table {
+      thead {
+        tr {
+          th {
+            border-color: $border-light;
+          }
+        }
+      }
+      tbody {
+        tr {
+          td {
+            border-color: $border-light;
+          }
+        }
+      }
+    }
+  }
+}

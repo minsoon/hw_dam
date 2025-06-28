@@ -1,0 +1,18 @@
+{{#if description}}
+  /** *
+  {{{formatDescription description}}}
+  */
+{{/if}}
+
+{{#if x-tag}}
+  /** @x-tag
+  {{x-tag}}
+  */
+{{/if}}
+
+export
+{{type}}
+{{name}}{{generics}}
+{
+{{{content}}}
+}

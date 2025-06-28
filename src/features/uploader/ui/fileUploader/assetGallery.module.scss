@@ -1,0 +1,29 @@
+@use '@/shared/styles/variables/index' as *;
+
+.assetGallery {
+  width: 948px;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+  &.onEditor {
+    transform: translateX(-178px);
+  }
+  .toolbar {
+    padding-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    p {
+      font-weight: $font-weight-normal;
+    }
+    .btns {
+      display: flex;
+      gap: 8px;
+    }
+  }
+  .gallery {
+    display: grid;
+    align-self: flex-start;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 16px;
+  }
+}

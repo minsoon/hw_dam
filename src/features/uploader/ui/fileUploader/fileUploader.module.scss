@@ -1,0 +1,27 @@
+@use '@/shared/styles/variables/index' as *;
+
+.fileBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  border: 2px dashed $primary;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f4731f1a;
+  .icon {
+    margin-top: -72px;
+    padding-bottom: 24px;
+    font-size: 48px;
+  }
+  dl {
+    padding-top: 16px;
+    dt {
+      padding-bottom: 4px;
+      font-weight: $font-weight-bold;
+    }
+  }
+}

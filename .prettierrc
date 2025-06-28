@@ -1,0 +1,32 @@
+{
+  "arrowParens": "avoid",
+  "bracketSpacing": true,
+  "htmlWhitespaceSensitivity": "css",
+  "insertPragma": false,
+  "bracketSameLine": false,
+  "jsxSingleQuote": true,
+  "printWidth": 120,
+  "proseWrap": "preserve",
+  "quoteProps": "as-needed",
+  "requirePragma": false,
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "useTabs": false,
+  "endOfLine": "auto",
+  "importOrder": [
+    "^react$",
+    "^next",
+    "^react-dropzone$",
+    "^antd$",
+    "^@ant-design",
+    "^@?\\w",
+    "^@/(.*)$",
+    "^[./]",
+    "\\.(css|scss)$"
+  ],
+  "importOrderSeparation": false,
+  "importOrderSortSpecifiers": true,
+  "plugins": ["@trivago/prettier-plugin-sort-imports"]
+}

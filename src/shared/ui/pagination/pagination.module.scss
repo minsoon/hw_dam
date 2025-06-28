@@ -1,0 +1,29 @@
+@use '@/shared/styles/variables/index' as *;
+
+.pagination {
+  justify-content: flex-end;
+
+  :global {
+    .ant-pagination-item,
+    .ant-pagination-prev,
+    .ant-pagination-next {
+      margin-inline-end: 4px !important;
+      min-width: 40px !important;
+      height: 40px !important;
+      border: 1px solid $border-light !important;
+      border-radius: 2px !important;
+      align-items: center !important;
+      display: flex !important;
+      justify-content: center !important;
+    }
+  }
+  :global(.ant-pagination-item-active) {
+    background-color: $primary !important;
+    a {
+      color: $text-white !important;
+    }
+  }
+  :global(.ant-pagination-disabled) {
+    background-color: $bg-surface-200;
+  }
+}

@@ -1,0 +1,162 @@
+@use '@/shared/styles/variables/index' as *;
+
+.defaultHeader {
+  padding: 0 16px;
+  border-bottom: 1px solid $border-light;
+
+  .closeButton,
+  .pageIcon {
+    position: relative;
+    padding-right: 16px;
+    font-size: 18px;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 0;
+      width: 1px;
+      height: 24px;
+      background-color: $bg-surface-300;
+      transform: translateY(-50%);
+    }
+  }
+  .title {
+    padding-left: 16px;
+    flex: 1;
+    :global(.ant-skeleton-title) {
+      margin-bottom: 10px !important;
+    }
+    :global(.ant-skeleton-paragraph) {
+      margin: 0 !important;
+    }
+    p {
+      padding-bottom: 4px;
+      display: flex;
+      :global(.anticon) {
+        margin-bottom: -2px;
+        padding-left: 4px;
+        color: $primary;
+        font-size: 16px;
+      }
+    }
+    dl {
+      dt {
+        padding-bottom: 4px;
+        display: flex;
+        :global(.anticon) {
+          margin-bottom: -2px;
+          padding-left: 4px;
+          color: $primary;
+          font-size: 16px;
+        }
+      }
+      dd {
+        display: flex;
+        gap: 8px;
+        font-size: $font-label;
+        color: $text-secondary;
+        span {
+          position: relative;
+          padding-left: 8px;
+          > span.hidden {
+            padding: 0 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: $primary;
+            border-radius: 22px;
+            background-color: $secondary-pale;
+            span {
+              padding-right: 5px;
+            }
+          }
+          &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 1px;
+            height: 12px;
+            background-color: $bg-surface-300;
+            transform: translateY(-50%);
+          }
+          &:first-child {
+            padding-left: 0;
+            &::before {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+  .infoButton {
+    display: flex;
+    gap: 8px;
+  }
+}
+
+.readonlyHeader {
+  padding: 0 16px;
+  color: $text-white;
+  border-bottom: 1px solid $neutrals-medium-grey;
+  background-color: $bg-surface-800;
+  .title {
+    dl {
+      dt {
+        padding-bottom: 4px;
+        display: flex;
+        :global(.anticon) {
+          margin-bottom: -2px;
+          padding-left: 4px;
+          color: $primary;
+          font-size: 16px;
+        }
+      }
+      dd {
+        display: flex;
+        gap: 8px;
+        font-size: $font-label;
+        color: $text-disabled;
+        span {
+          position: relative;
+          padding-left: 8px;
+          &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 1px;
+            height: 12px;
+            background-color: $neutrals-medium-grey;
+            transform: translateY(-50%);
+          }
+          &:first-child {
+            padding-left: 0;
+            &::before {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+  .infoButton {
+    :global(.ant-btn) {
+      color: $text-white;
+      background-color: $bg-surface-800;
+      border-color: $neutrals-medium-grey;
+
+      &:hover {
+        color: $text-white !important;
+        background-color: $neutrals-medium-grey !important;
+        border-color: $neutrals-medium-grey !important;
+      }
+    }
+  }
+  .closeButton {
+    :global(.anticon) {
+      color: $text-white;
+    }
+  }
+}

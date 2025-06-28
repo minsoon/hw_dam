@@ -1,0 +1,76 @@
+@use '@/shared/styles/variables/index' as *;
+
+.selectionBar {
+  padding: 11px 16px;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 100px);
+  transition: all 0.3s ease;
+  opacity: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: $min-width;
+  height: 60px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  color: $text-white;
+  background-color: $bg-surface-800;
+  &.active {
+    opacity: 1;
+    transform: translate(-50%, -20px);
+  }
+  .secondary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    .closeBtn {
+      color: $text-white;
+      :global(.anticon) {
+        font-size: 16px;
+      }
+    }
+    :global(.ant-checkbox-label) {
+      color: $text-white;
+    }
+    // :global(.ant-checkbox-wrapper) {
+    //   :global(.ant-checkbox) {
+    //     :global(.ant-checkbox-inner) {
+    //       width: 18px;
+    //       height: 18px;
+    //     }
+    //   }
+    // }
+    .count {
+      position: relative;
+      margin-right: 8px;
+      padding-right: 24px;
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        width: 1px;
+        height: 16px;
+        background-color: $neutrals-medium-grey;
+      }
+    }
+    .secondaryActions {
+      display: flex;
+      align-items: center;
+    }
+    button {
+      border: none;
+    }
+  }
+  .main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    button {
+      border: none;
+    }
+  }
+}

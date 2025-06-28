@@ -1,0 +1,147 @@
+@use '@/shared/styles/variables/index' as *;
+
+.modalFilters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 20px;
+  dl {
+    dt {
+      padding-bottom: 8px;
+      font-size: $font-label;
+      color: $text-secondary;
+    }
+    dd {
+      :global(.ant-select) {
+        width: 100%;
+      }
+    }
+  }
+}
+.modalFiltersFooter {
+  display: flex;
+  justify-content: space-between;
+  .clearAllBtn {
+    text-decoration: underline;
+  }
+}
+
+.modalForm {
+  p {
+    padding-bottom: 15px;
+  }
+  dl {
+    padding-bottom: 15px;
+    &:last-child {
+      padding-bottom: 0;
+    }
+    dt {
+      padding-bottom: 8px;
+      font-size: $font-label;
+      color: $text-secondary;
+    }
+    dd {
+      :global(.ant-checkbox-wrapper) {
+        padding-top: 5px;
+      }
+      :global(.ant-select) {
+        width: 100%;
+      }
+      p {
+        padding-top: 5px;
+        font-size: $font-label;
+        color: $text-secondary;
+      }
+      textarea {
+        height: 120px;
+      }
+      .copyUrl {
+        display: flex;
+        gap: 10px;
+        :global(.ant-form-item) {
+          flex: 1;
+        }
+      }
+    }
+  }
+}
+.modalConfirm {
+  dl {
+    padding-top: 10px;
+    dt {
+      padding-bottom: 10px;
+      .required {
+        color: $error;
+      }
+    }
+  }
+}
+
+.modalConfirmButton {
+  padding-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modalAddedTags {
+  dl {
+    dt {
+      padding-bottom: 8px;
+      font-size: $font-label;
+    }
+    dd {
+      padding-bottom: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      font-size: $font-footnote-secondary;
+      color: $text-secondary;
+      span {
+        padding: 2px 6px;
+        border-radius: 2px;
+        background-color: $bg-surface-300;
+      }
+      p {
+        padding-top: 5px;
+        font-size: $font-label;
+        color: $text-secondary;
+      }
+    }
+  }
+}
+
+.fileBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 250px;
+  border: 1px dashed $primary;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f4731f1a;
+}
+.fileInfo {
+  padding: 20px 0;
+  border: 1px dashed $bg-surface-300;
+  border-radius: 4px;
+  text-align: center;
+
+  background-color: $bg-surface-200;
+  p {
+    margin: 0 auto;
+    width: 300px;
+    text-align: center;
+    cursor: pointer;
+    background-color: $bg-surface-100;
+    img {
+      width: 100%;
+    }
+    span {
+      display: block;
+      padding: 5px 20px 10px 20px;
+    }
+  }
+}

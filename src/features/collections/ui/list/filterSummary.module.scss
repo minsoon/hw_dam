@@ -1,0 +1,46 @@
+@use '@/shared/styles/variables/index' as *;
+
+.filterSummary {
+  padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  .filterBy {
+    position: relative;
+    padding-left: 16px;
+    display: flex;
+    align-items: center;
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: block;
+      width: 1px;
+      height: 12px;
+      background-color: $bg-surface-300;
+    }
+    .tags {
+      padding-left: 16px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      .tag {
+        &:global(.ant-tag) {
+          margin-inline-end: 0;
+          color: $text-secondary;
+          background-color: $bg-surface-300;
+        }
+        :global(.anticon) {
+          padding-left: 4px;
+          font-size: 10px;
+        }
+      }
+    }
+  }
+  .clearAllBtn {
+    padding: 0;
+    text-decoration: underline;
+  }
+}

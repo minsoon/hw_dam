@@ -1,0 +1,253 @@
+@use '@/shared/styles/variables/index' as *;
+
+.assetInfo {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .infoBox {
+    padding: 25px 20px;
+    flex: 1;
+    overflow-y: auto;
+    .info {
+      padding-bottom: 16px;
+      border-bottom: 1px solid $border-light;
+      .title {
+        padding-bottom: 16px;
+        font-size: $font-h4;
+        span {
+          padding-top: 8px;
+          display: block;
+          font-size: $font-label;
+          color: $text-secondary;
+        }
+      }
+      .editButton {
+        padding-bottom: 16px;
+        button {
+          background-color: $bg-surface-200;
+          &:hover {
+            border: 1px solid $neutrals-block;
+            color: $neutrals-block;
+          }
+        }
+      }
+      .description {
+        padding-bottom: 16px;
+      }
+    }
+    .panel {
+      :global(.ant-collapse) {
+        background-color: transparent;
+      }
+      :global(.ant-collapse-expand-icon) {
+        color: $text-primary;
+      }
+      :global(.ant-collapse-header) {
+        padding: 16px 6px 16px 0;
+      }
+      :global(.ant-collapse-item) {
+        border-bottom: 1px solid $border-light;
+      }
+      :global(.ant-collapse-content-box) {
+        padding: 8px 0 16px 0;
+      }
+      .label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        :global(.anticon) {
+          margin-bottom: -2px;
+          color: $primary;
+          font-size: 16px;
+        }
+      }
+      .linkInput {
+        padding: 0 0 0 12px;
+        background-color: $bg-surface-200;
+      }
+      .downloadList {
+        ul {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          li {
+            padding: 11px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid $border-light;
+            border-radius: 4px;
+            cursor: pointer;
+            &.on {
+              border-color: $primary;
+            }
+            p {
+              width: 48px;
+              height: 48px;
+              background-size: cover;
+              background-position: center;
+            }
+            .fileIcon {
+              width: 48px;
+              height: 48px;
+              background: url('/images/icon_file.svg') no-repeat center / 24px;
+            }
+            dl {
+              padding-left: 12px;
+              flex: 1;
+              dt {
+                width: 190px;
+                font-size: $font-label;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+              dd {
+                display: flex;
+                gap: 8px;
+                span {
+                  position: relative;
+                  padding-left: 9px;
+                  font-size: $font-label;
+                  color: $text-secondary;
+                  &::after {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    left: 0;
+                    transform: translateY(-50%);
+                    width: 1px;
+                    height: 12px;
+                    background-color: $bg-surface-300;
+                  }
+                  &:first-child {
+                    padding-left: 0;
+                    &::after {
+                      display: none;
+                    }
+                  }
+                }
+              }
+            }
+            :global(.anticon) {
+              color: $primary;
+              font-size: 18px;
+            }
+            &:hover {
+              border-color: $neutrals-medium-grey;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .infoList {
+    dl {
+      padding-bottom: 16px;
+      dt {
+        padding-bottom: 4px;
+        font-size: $font-label;
+        color: $text-secondary;
+      }
+      &:last-child {
+        padding-bottom: 0;
+      }
+    }
+  }
+  .downloadButton {
+    padding: 16px 20px;
+    flex-shrink: 0;
+    width: 100%;
+    height: 72px;
+    box-shadow: 0px -4px 16px 0px rgba(0, 0, 0, 0.25);
+  }
+  .tagList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    :global(.ant-tag) {
+      margin: 0;
+      background-color: $neutrals-divider-grey;
+      color: $text-secondary;
+      border-color: $neutrals-divider-grey;
+    }
+  }
+}
+
+.darkInfo {
+  .infoBox {
+    .info {
+      border-bottom: 1px solid $neutrals-medium-grey;
+      .title {
+        span {
+          color: $text-disabled;
+        }
+      }
+    }
+    .panel {
+      :global(.ant-collapse-expand-icon) {
+        color: $bg-surface-100;
+      }
+      :global(.ant-collapse-item) {
+        border-bottom: 1px solid $neutrals-medium-grey;
+      }
+      .label {
+        color: $text-white;
+      }
+      .linkInput {
+        background-color: $bg-surface-300;
+      }
+      .downloadList {
+        ul {
+          li {
+            border: 1px solid $neutrals-medium-grey;
+            dl {
+              dt {
+                color: $text-white;
+              }
+              dd {
+                span {
+                  color: $text-disabled;
+                  &::after {
+                    background-color: $neutrals-medium-grey;
+                  }
+                }
+              }
+            }
+            :global(.anticon) {
+              color: $primary;
+              font-size: 18px;
+            }
+            &:hover {
+              background-color: $neutrals-medium-grey;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .infoList {
+    dl {
+      dt {
+        color: $text-disabled;
+      }
+      dd {
+        color: $text-white;
+      }
+    }
+  }
+
+  .downloadButton {
+    background-color: $bg-surface-800;
+  }
+
+  .tagList {
+    :global(.ant-tag) {
+      background-color: $neutrals-medium-grey;
+      color: $text-white;
+      border-color: $neutrals-medium-grey;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+@use '@/shared/styles/variables/index' as *;
+
+.dropdown {
+  ul {
+    padding: 4px 0 !important;
+    width: 200px;
+    border-radius: 4px !important;
+    li {
+      :global(.anticon) {
+        position: relative;
+        bottom: -2px;
+        padding-right: 8px;
+        font-size: 18px;
+      }
+    }
+  }
+}

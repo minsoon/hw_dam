@@ -1,0 +1,304 @@
+@use '@/shared/styles/variables/index' as *;
+
+.card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid $bg-surface-100;
+  border-radius: 9px;
+  background-color: $bg-surface-100;
+  &.checked {
+    border-color: $primary;
+    .cardLink {
+      border: 1px solid $border-light;
+      border-color: $primary;
+    }
+  }
+  .cardLink {
+    overflow: hidden;
+    height: 100%;
+    border: 1px solid $border-light;
+    border-radius: 8px;
+    cursor: pointer;
+    &.notLink {
+      cursor: default;
+    }
+  }
+  .image {
+    width: 242px;
+    height: 136px;
+    background: no-repeat center center / cover;
+  }
+  .notImage {
+    width: 242px;
+    height: 136px;
+    background: $bg-surface-200 url('/images/not_image.png') no-repeat center center / 20% auto;
+  }
+  p {
+    img {
+      height: 136px;
+    }
+  }
+  dl {
+    padding: 12px;
+    dt {
+      padding-bottom: 4px;
+    }
+    dd {
+      display: flex;
+      font-size: $font-label;
+      font-weight: $font-weight-normal;
+      color: $text-secondary;
+      p {
+        position: relative;
+        padding-right: 8px;
+        height: 22px;
+        line-height: 22px;
+        > span.hidden {
+          padding: 0 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $primary;
+          border-radius: 22px;
+          background-color: $secondary-pale;
+          span {
+            padding-right: 5px;
+          }
+        }
+        &:nth-child(n + 2) {
+          padding: 0 8px;
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-40%);
+            height: 12px;
+            width: 1px;
+            background-color: #ccc;
+          }
+        }
+        &.fileType {
+          position: absolute;
+          top: 102px;
+          right: 12px;
+          padding: 0 8px;
+          font-size: $font-label;
+          line-height: 22px;
+          color: #fff;
+          border-radius: 22px;
+          background-color: rgba(0, 0, 0, 0.4);
+          &::before {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+  .checkbox {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: none;
+    :global(.ant-checkbox-wrapper) {
+      :global(.ant-checkbox) {
+        :global(.ant-checkbox-inner) {
+          width: 24px;
+          height: 24px;
+          border-color: $neutrals-block;
+        }
+        :global(.ant-checkbox-inner::after) {
+          inset-inline-start: 33%;
+        }
+      }
+      :global(.ant-checkbox-checked) {
+        :global(.ant-checkbox-inner) {
+          border-color: $secondary-medium;
+        }
+      }
+    }
+    &.checked {
+      display: flex;
+    }
+  }
+  .ritBtn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: none;
+    align-items: center;
+    border: 1px solid $border-light;
+    border-radius: 4px;
+    background-color: $bg-surface-100;
+
+    .btnMenu {
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-right: 1px solid $border-light;
+      display: none;
+    }
+
+    .btnBookmark {
+      width: 30px;
+      height: 30px;
+      color: $neutrals-divider-grey;
+      &:hover {
+        color: $neutrals-medium-grey;
+        background-color: $neutrals-divider-grey;
+      }
+    }
+    .oneBtn {
+      border-right: 0;
+    }
+
+    &.bookmarked {
+      display: flex;
+      .btnBookmark {
+        color: $primary !important;
+      }
+    }
+    &.open {
+      display: flex;
+      .btnMenu {
+        display: flex;
+      }
+    }
+  }
+  &:hover {
+    .ritBtn {
+      display: flex;
+      .btnMenu {
+        display: flex;
+      }
+    }
+    .checkbox {
+      display: flex;
+    }
+  }
+  &.darkCard {
+    border: 0;
+    .cardLink {
+      border: 0;
+    }
+  }
+}
+
+.recentCard {
+  position: relative;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid $border-light;
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  .cardLink {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  p {
+    img {
+      vertical-align: top;
+      height: 68px;
+    }
+  }
+  .image {
+    width: 120px;
+    height: 68px;
+    background: no-repeat center center / cover;
+  }
+  .notImage {
+    width: 120px;
+    height: 68px;
+    background: $bg-surface-200 url('/images/not_image.png') no-repeat center center / 30% auto;
+  }
+  dl {
+    padding-left: 16px;
+    dt {
+      padding-bottom: 4px;
+    }
+    dd {
+      display: flex;
+      font-size: $font-label;
+      font-weight: $font-weight-normal;
+      color: $text-secondary;
+      p {
+        position: relative;
+        padding-right: 8px;
+        height: 22px;
+        line-height: 22px;
+        > span.hidden {
+          padding: 0 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $primary;
+          border-radius: 22px;
+          background-color: $secondary-pale;
+          span {
+            padding-right: 5px;
+          }
+        }
+        &:nth-child(n + 2) {
+          padding: 0 8px;
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-40%);
+            height: 12px;
+            width: 1px;
+            background-color: #ccc;
+          }
+        }
+      }
+    }
+  }
+  .ritBtn {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+    flex-direction: row-reverse;
+    .btnMenu {
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+    }
+
+    .btnBookmark {
+      width: 32px;
+      height: 32px;
+      color: $neutrals-divider-grey;
+      &:hover {
+        color: $neutrals-medium-grey;
+        background-color: $neutrals-divider-grey;
+      }
+    }
+
+    &.bookmarked {
+      .btnBookmark {
+        color: $primary !important;
+      }
+    }
+  }
+}
+
+.dropdown {
+  ul {
+    padding: 4px 0 !important;
+    width: 200px;
+    border-radius: 4px !important;
+    li {
+      :global(.anticon) {
+        position: relative;
+        bottom: -2px;
+        padding-right: 8px;
+        font-size: 18px;
+      }
+    }
+  }
+}
