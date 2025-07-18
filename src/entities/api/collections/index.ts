@@ -64,6 +64,7 @@ export const fetchCollectionDownload = async (payload: {
   is_with_working: boolean
 }): Promise<{ data: Blob; fileName: string }> => {
   const response = await apiInstance.get(`/api/v1/collections/${payload.collection_id}/download`, {
+    timeout: 1000 * 60 * 10,
     params: { is_with_working: payload.is_with_working },
     responseType: 'blob',
   })

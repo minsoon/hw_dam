@@ -9,20 +9,20 @@ export const ModalFilters = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   const submitFilters = useAssetFilterSubmit()
 
   const handleChange = useCallback(
-    (key: string) => (value: string[]) => {
+    (key: string) => (value: number[]) => {
       setFilters(key.replace(/\s+/g, ''), {
         title: key,
         data: value,
       })
+      submitFilters()
     },
-    [setFilters]
+    [setFilters, submitFilters]
   )
 
   const handleClose = useCallback(() => {
-    removeFilter(null)
     submitFilters()
     onClose()
-  }, [onClose, removeFilter, submitFilters])
+  }, [onClose, submitFilters])
 
   const handleSubmit = useCallback(() => {
     submitFilters()
@@ -37,7 +37,7 @@ export const ModalFilters = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       title='Filters'
       footer={[
         <div className={styles.modalFiltersFooter} key='submit'>
-          <Button className={styles.clearAllBtn} color='default' variant='link' onClick={handleClose}>
+          <Button className={styles.clearAllBtn} color='default' variant='link' onClick={() => removeFilter(null)}>
             Clear all
           </Button>
           <Button type='primary' onClick={handleSubmit}>
@@ -54,13 +54,13 @@ export const ModalFilters = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               <Select
                 title={property.category_name}
                 mode='multiple'
-                value={filters?.[property.category_name]?.data ?? undefined}
+                value={filters?.[property.category_name.replace(/\s+/g, '')]?.data ?? []}
                 options={property.options.map(option => ({
                   label: option.option_name,
                   value: option.property_option_id,
                 }))}
                 placeholder='Select...'
-                onChange={value => handleChange(property.category_name)(value)}
+                onChange={value => handleChange(property.category_name.trim())(value)}
               />
             </dd>
           </dl>

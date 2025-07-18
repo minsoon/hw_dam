@@ -35,6 +35,7 @@ export const useAssetForm = (form: FormInstance) => {
                   variation_id: variation.variation_id,
                   name: variation.name,
                   file_type: variation.file_type.join(';'),
+                  is_working_file: variation.is_working_file,
                 })),
               ...(file && { file: file.file }),
             },

@@ -15,17 +15,11 @@ const Uploader = ({ id }: { id: string }) => {
   useAssetRefsQuery(Number(id))
 
   useEffect(() => {
-    setCurrentIndex(null)
+    setCurrentIndex(0)
     return () => {
       clearAssets()
     }
   }, [isImageType, clearAssets, setCurrentIndex])
-
-  useEffect(() => {
-    if (!isImageType) {
-      setCurrentIndex(0)
-    }
-  }, [isImageType, setCurrentIndex])
 
   useEffect(() => {
     return () => {

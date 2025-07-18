@@ -7,12 +7,15 @@ import {
   SyncOutlined,
   UpOutlined,
 } from '@ant-design/icons'
+import { useUploaderStore } from '@/features/uploader/model/uploaderStore'
 import { useAuth } from '@/shared/contexts/AuthContext'
 import {
   useAssetCheckboxPanel,
   useAssetContactsPanel,
   useAssetCopyrightPanel,
   useAssetEditPanel,
+  useAssetProductModelPanel,
+  useAssetProductSegmentPanel,
   useAssetRadioPanel,
   useAssetTagPanel,
 } from '@/shared/model/useAssetEditPanel'
@@ -22,6 +25,8 @@ import {
   useUploadContactsPanel,
   useUploadCopyrightPanel,
   useUploadEditPanel,
+  useUploadProductModelPanel,
+  useUploadProductSegmentPanel,
   useUploadRadioPanel,
   useUploadTagPanel,
 } from '@/shared/model/useUploadEditPanel'
@@ -32,10 +37,12 @@ const { TextArea } = Input
 
 export const PanelTitle = ({ panel, isImageType }: { panel: PanelItemsProps; isImageType?: boolean }) => {
   const { handleApplyAll } = useApplyAll(panel)
+  const { assets } = useUploaderStore()
+
   return (
     <div className={styles.panelTitle}>
       <p>{panel.title}</p>
-      {isImageType && (
+      {isImageType && assets.length > 1 && (
         <Button
           color='default'
           variant='text'
@@ -54,19 +61,29 @@ export const PanelTitle = ({ panel, isImageType }: { panel: PanelItemsProps; isI
   )
 }
 
-export const InfoEditPanel = ({ isImageType, viewType }: { isImageType?: boolean; viewType: ViewType }) => {
+export const InfoEditPanel = ({
+  isImageType,
+  viewType,
+  isEmergencyOverride,
+}: {
+  isImageType?: boolean
+  viewType: ViewType
+  isEmergencyOverride?: boolean
+}) => {
   const uploadPanel = useUploadEditPanel()
   const assetPanel = useAssetEditPanel()
 
-  const { name, setName, description, setDescription, isConfidential, handleConfidential, handleBlur } =
+  const { name, handleNameChange, description, setDescription, isConfidential, handleConfidential, handleBlur } =
     viewType === 'upload' ? uploadPanel : assetPanel
 
   return (
     <div className={styles.infoEditPanel}>
       <dl>
-        <dt>Asset name</dt>
+        <dt>
+          Asset name<span>*</span>
+        </dt>
         <dd>
-          <Input value={name} onBlur={() => handleBlur()} onChange={e => setName(e.target.value)} />
+          <Input value={name} onChange={handleNameChange} disabled={isEmergencyOverride} />
         </dd>
         <dt>Description</dt>
         <dd>
@@ -128,6 +145,11 @@ export const TagEditPanel = (panel: PanelItemsProps) => {
           placeholder='Add tags'
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+              handleAddTag()
+            }
+          }}
           className={styles.input}
         />
         <Button type='text' icon={<PlusOutlined />} className={styles.addButton} onClick={handleAddTag} />
@@ -215,11 +237,57 @@ export const CheckboxEditPanel = (panel: PanelItemsProps) => {
   )
 }
 
+export const ProductSegmentEditPanel = (panel: PanelItemsProps) => {
+  const uploadPanel = useUploadProductSegmentPanel()
+  const assetPanel = useAssetProductSegmentPanel()
+  const { panelData, selectedIds, handleChange } = panel.viewType === 'upload' ? uploadPanel : assetPanel
+
+  return (
+    <div className={styles.segmentEditPanel}>
+      <Checkbox.Group
+        style={{ display: 'flex', flexDirection: 'column' }}
+        options={panelData?.product_segments?.map(item => ({
+          label: item.spec_name,
+          value: item.product_segment_id?.toString(),
+        }))}
+        value={selectedIds}
+        onChange={handleChange}
+      />
+    </div>
+  )
+}
+
+export const ProductModelEditPanel = (panel: PanelItemsProps) => {
+  const uploadPanel = useUploadProductModelPanel()
+  const assetPanel = useAssetProductModelPanel()
+  const { options, selectedIds, handleSearch, handleChange } = panel.viewType === 'upload' ? uploadPanel : assetPanel
+
+  return (
+    <Select
+      mode='multiple'
+      showSearch
+      optionFilterProp='label'
+      filterOption={false}
+      onSearch={handleSearch}
+      style={{ width: '100%' }}
+      options={options}
+      placeholder='Select Product Model'
+      fieldNames={{ label: 'product_model', value: 'product_model_id' }}
+      value={selectedIds}
+      onChange={handleChange}
+    />
+  )
+}
+
 export const SelectEditPanel = (panel: PanelItemsProps) => {
   return (
     <Select
+      showSearch
+      optionFilterProp='label'
+      filterOption={(input, option) => (option?.label as string).toLowerCase().includes(input.toLowerCase())}
       style={{ width: '100%', height: '40px' }}
-      options={panel.data.map(item => ({ value: item.value, label: item.id }))}
+      options={panel.data.map(item => ({ value: item.id, label: item.value }))}
+      placeholder={'Select Product Model'}
     />
   )
 }
@@ -254,56 +322,64 @@ export const ContactsEditPanel = (panel: PanelItemsProps) => {
   const assetPanel = useAssetContactsPanel()
   const isUpload = panel.viewType === 'upload'
   const { user } = useAuth()
-  const { asset, handleChange } = isUpload ? uploadPanel : assetPanel
+  const { asset, formValues, handleChange, handleBlur } = isUpload ? uploadPanel : assetPanel
 
   return (
     <div className={styles.contactsEditPanel}>
       <dl>
         <dt>Uploader</dt>
         <dd>
-          <Input placeholder='Uploader name' value={isUpload ? user?.username : asset?.uploader_name} disabled />
+          <Input placeholder='Uploader name' value={isUpload ? user?.user_name : asset?.uploader_name} disabled />
           {/* <Input placeholder='Contact number' value={isUpload ? user?.phone : asset?.uploader_contact_number} disabled /> */}
           <Input placeholder='Email address' value={isUpload ? user?.email : asset?.uploader_email} disabled />
         </dd>
         <dt>Are you the asset owner?</dt>
         <dd>
           <Radio.Group
-            value={asset?.is_owner}
+            value={formValues.is_owner}
             onChange={e => handleChange('is_owner', e.target.value)}
+            onBlur={handleBlur}
             options={[
               { label: 'Yes', value: 1 },
               { label: 'No', value: 0 },
             ]}
           />
         </dd>
+        {formValues.is_owner === 0 && (
+          <>
+            <dt>Asset owner</dt>
+            <dd>
+              <Input
+                placeholder='Owner name'
+                value={formValues.owner_name}
+                onChange={e => handleChange('owner_name', e.target.value)}
+                onBlur={handleBlur}
+              />
+              <Input
+                placeholder='Email address'
+                value={formValues.owner_email}
+                onChange={e => handleChange('owner_email', e.target.value)}
+                onBlur={handleBlur}
+              />
+            </dd>
 
-        <dt>Asset owner</dt>
-        <dd>
-          <Input
-            placeholder='Owner name'
-            value={asset?.owner_name}
-            onChange={e => handleChange('owner_name', e.target.value)}
-          />
-          <Input
-            placeholder='Email address'
-            value={asset?.owner_email}
-            onChange={e => handleChange('owner_email', e.target.value)}
-          />
-        </dd>
-
-        <dt>Agency contact</dt>
-        <dd>
-          <Input
-            placeholder='Agency name'
-            value={asset?.agency_name}
-            onChange={e => handleChange('agency_name', e.target.value)}
-          />
-          <Input
-            placeholder='Contact name'
-            value={asset?.agency_contact_name}
-            onChange={e => handleChange('agency_contact_name', e.target.value)}
-          />
-        </dd>
+            <dt>Agency contact</dt>
+            <dd>
+              <Input
+                placeholder='Agency name'
+                value={formValues.agency_name}
+                onChange={e => handleChange('agency_name', e.target.value)}
+                onBlur={handleBlur}
+              />
+              <Input
+                placeholder='Contact name'
+                value={formValues.agency_contact_name}
+                onChange={e => handleChange('agency_contact_name', e.target.value)}
+                onBlur={handleBlur}
+              />
+            </dd>
+          </>
+        )}
       </dl>
     </div>
   )

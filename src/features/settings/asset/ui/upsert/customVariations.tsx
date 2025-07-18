@@ -12,8 +12,8 @@ import SortableRow from './SortableRow'
 import styles from './upsert.module.scss'
 
 const CustomVariations = () => {
-  const { customVariations: items, setCustomVariations: setItems } = useSettingAssetStore()
-
+  const { customVariations: items, setCustomVariations: setItems, detail } = useSettingAssetStore()
+  const isAuto = detail?.default_type === 'Auto'
   const sensors = useSensors(useSensor(PointerSensor))
 
   const handleDragEnd = useCallback(
@@ -44,7 +44,7 @@ const CustomVariations = () => {
   )
 
   const handleChange = useCallback(
-    (id: string, field: keyof VariationItem, value: string | string[]) => {
+    (id: string, field: keyof VariationItem, value: string | string[] | number) => {
       const updatedItems = items.map(item => (item.id === id ? { ...item, [field]: value } : item))
       setItems(updatedItems)
     },
@@ -52,12 +52,13 @@ const CustomVariations = () => {
   )
 
   return (
-    <div className={styles.customVariations}>
+    <div className={`${styles.customVariations} ${isAuto ? styles.disabled : ''}`}>
       <div className={styles.title}>Custom variations</div>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={items.map(i => i.id)} strategy={verticalListSortingStrategy}>
           <table>
             <colgroup>
+              <col style={{ width: 30 }} />
               <col style={{ width: 30 }} />
               <col />
               <col style={{ width: 358 }} />
@@ -66,6 +67,7 @@ const CustomVariations = () => {
             <thead>
               <tr>
                 <td></td>
+                <th>WF</th>
                 <th>Name</th>
                 <th>File type</th>
                 <th></th>
@@ -79,7 +81,7 @@ const CustomVariations = () => {
           </table>
         </SortableContext>
       </DndContext>
-      <Button icon={<PlusOutlined />} onClick={handleAdd} style={{ marginTop: 16 }}>
+      <Button icon={<PlusOutlined />} onClick={handleAdd} style={{ marginTop: 16 }} disabled={isAuto}>
         Add variations
       </Button>
     </div>

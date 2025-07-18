@@ -7,27 +7,25 @@ import { formatDateTime } from '@/shared/lib/formatDate'
 import styles from './versionHistory.module.scss'
 
 export const VersionHistory = () => {
-  const { asset, setCurrentVersionId, currentVersionId } = useAssetDetailStore()
+  const { asset, setCurrentVersionId, currentVersionId, removeCurrentImage } = useAssetDetailStore()
   const { all_versions: versions } = asset || {}
   const router = useRouter()
+
   const handleClick = useCallback(
-    (key: string) => {
-      const selectedVersionId = Number(key)
-      if (selectedVersionId === currentVersionId) return
+    (key: number) => {
+      if (key === currentVersionId) return
 
-      const latestVersionId = asset?.all_versions?.[0]?.asset_version_id
+      const latestVersionId = asset?.all_versions?.[0]?.version_number
 
-      if (selectedVersionId === latestVersionId) {
-        // 최신 버전 → 쿼리 파라미터 없이 이동
-        router.push(`/assets/${asset?.asset_id}`)
+      if (key === latestVersionId) {
+        router.push(`/assets/${asset?.id_title}`)
       } else {
-        // 과거 버전 → 쿼리 포함
-        router.push(`/assets/${asset?.asset_id}?version=${key}`)
+        router.push(`/assets/${asset?.id_title}?v=${key}`)
       }
-
-      setCurrentVersionId(selectedVersionId)
+      removeCurrentImage()
+      setCurrentVersionId(key)
     },
-    [asset, currentVersionId, router, setCurrentVersionId]
+    [asset, currentVersionId, router, setCurrentVersionId, removeCurrentImage]
   )
 
   if (!asset || !versions) return <></>
@@ -36,7 +34,7 @@ export const VersionHistory = () => {
     <Dropdown
       menu={{
         items: versions.map((version, index) => ({
-          key: version.asset_version_id?.toString() || index.toString(),
+          key: version.version_number,
           type: 'item',
           label: (
             <div className={styles.versionItem}>
@@ -54,8 +52,8 @@ export const VersionHistory = () => {
           ),
         })),
 
-        selectedKeys: [(currentVersionId ?? asset?.all_versions?.[0]?.asset_version_id)?.toString() ?? ''],
-        onClick: info => handleClick(info.key),
+        selectedKeys: [(currentVersionId ?? asset?.all_versions?.[0]?.version_number ?? '').toString()],
+        onClick: info => handleClick(Number(info.key)),
       }}
       trigger={['click']}
       placement='bottomRight'

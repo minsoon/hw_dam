@@ -40,7 +40,7 @@ export const useAssetQuery = (payload: AssetListRequest, options?: { enabled?: b
   const query = useQuery<AssetListResponse, Error>({
     queryKey: ['assets', payload],
     queryFn: () => fetchAssets(payload),
-    staleTime: 1000,
+    staleTime: 10 * 1000,
     ...options,
   })
   useEffect(() => {
@@ -57,7 +57,7 @@ export const useAssetRefsQuery = () => {
   const query = useQuery<AssetRefsResponse, Error>({
     queryKey: ['assetRefs'],
     queryFn: () => fetchAssetRefs(),
-    staleTime: 1000,
+    staleTime: 10 * 60 * 1000,
   })
 
   useEffect(() => {
@@ -69,11 +69,11 @@ export const useAssetRefsQuery = () => {
   return query
 }
 
-export const useAssetByIdQuery = (id: number, version_id?: number | null, options?: { enabled?: boolean }) => {
+export const useAssetByIdQuery = (id: number, v?: number | null, options?: { enabled?: boolean }) => {
   const { setAsset } = useAssetDetailStore()
   const query = useQuery<AssetDetailResponse, Error>({
-    queryKey: ['assetById', id, version_id],
-    queryFn: () => fetchAssetById(id, version_id),
+    queryKey: ['assetById', id, v],
+    queryFn: () => fetchAssetById(id, v),
     staleTime: 0,
     refetchOnMount: true,
     initialData: undefined,
@@ -89,11 +89,11 @@ export const useAssetByIdQuery = (id: number, version_id?: number | null, option
   return query
 }
 
-export const useAssetByHashQuery = (hash: string, options?: { enabled?: boolean }) => {
+export const useAssetByHashQuery = (hash: string, v?: string | null, options?: { enabled?: boolean }) => {
   const { setAsset } = useAssetDetailStore()
   const query = useQuery<AssetDetailResponse, Error>({
     queryKey: ['assetByHash', hash],
-    queryFn: () => fetchAssetByHash(hash),
+    queryFn: () => fetchAssetByHash(hash, v),
     staleTime: 0,
     refetchOnMount: true,
     initialData: undefined,
@@ -172,7 +172,7 @@ export const useCollectionTagsQuery = (page = 1, keyword = '', limit = 99999) =>
   const query = useQuery<PaginatedResponse, Error>({
     queryKey: ['collectionTags', page, keyword],
     queryFn: () => fetchCollectionTags(page, keyword, limit),
-    staleTime: 1000 * 60 * 60,
+    staleTime: 10 * 60 * 1000,
   })
   return query
 }
@@ -181,6 +181,7 @@ export const useCollectionsQuery = (limit = 99999) => {
   const query = useQuery<CollectionsListResponse, Error>({
     queryKey: ['collections', limit],
     queryFn: () => fetchCollections({ page: 1, limit }),
+    staleTime: 10 * 1000,
   })
   return query
 }

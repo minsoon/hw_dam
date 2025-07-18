@@ -10,9 +10,13 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'hanwhastorage.blob.core.windows.net',
       },
+      {
+        protocol: 'https',
+        hostname: 'hvsgmpdevstorage.blob.core.windows.net',
+      },
     ],
   },
-  reactStrictMode: true,
+  reactStrictMode: false,
   swcMinify: true,
 }
 

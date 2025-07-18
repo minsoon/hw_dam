@@ -11,8 +11,8 @@ export const SelectChecked = ({
 }: {
   title: string
   options: { key: number; value: string }[]
-  onChange: (key: string) => (value: string[]) => void
-  value?: string[]
+  onChange: (key: string) => (value: number[]) => void
+  value?: number[]
 }) => {
   const [open, setOpen] = useState(false)
 

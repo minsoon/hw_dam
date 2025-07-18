@@ -27,17 +27,35 @@
     grid-template-areas:
       'left top-right'
       'left bottom-right';
-    p {
+    width: 240px;
+    height: 136px;
+    .imageBox {
+      position: relative;
       grid-area: left;
-      width: 121px;
-      background: no-repeat center / cover;
+      img {
+        width: 120px;
+        height: 136px;
+        object-fit: cover;
+        vertical-align: top;
+      }
+      :global(.ant-skeleton-image) {
+        width: 120px !important;
+        height: 136px !important;
+        border-radius: 0 !important;
+      }
       &.notImage {
-        background-color: $bg-surface-200;
-        background-size: 30% auto;
+        background: url('/images/logo-default.png') no-repeat center;
+        background-size: 25% auto;
       }
       &:nth-child(2),
       &:nth-child(3) {
         height: 68px;
+        img {
+          height: 68px;
+        }
+        :global(.ant-skeleton-image) {
+          height: 68px !important;
+        }
       }
       &:nth-child(2) {
         grid-area: top-right;
@@ -89,6 +107,7 @@
         padding-top: 8px;
         display: -webkit-box;
         -webkit-line-clamp: 1;
+        line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
         box-sizing: border-box;
@@ -197,17 +216,39 @@
     grid-template-areas:
       'left top-right'
       'left bottom-right';
-    p {
+    width: 120px;
+    height: 68px;
+    .imageBox {
+      position: relative;
       grid-area: left;
-      width: 60px;
       background: no-repeat center / cover;
+      img {
+        object-fit: cover;
+        width: 60px;
+        height: 68px;
+      }
+      :global(.ant-skeleton-image) {
+        width: 60px !important;
+        height: 68px !important;
+        border-radius: 0 !important;
+      }
+      :global(.ant-skeleton-image-svg) {
+        width: 20px !important;
+        height: 20px !important;
+      }
       &.notImage {
-        background-color: $bg-surface-200;
-        background-size: 40% auto;
+        background: url('/images/logo-default.png') no-repeat center;
+        background-size: 25% auto;
       }
       &:nth-child(2),
       &:nth-child(3) {
         height: 34px;
+        img {
+          height: 34px;
+        }
+        :global(.ant-skeleton-image) {
+          height: 34px !important;
+        }
       }
       &:nth-child(2) {
         grid-area: top-right;
@@ -272,6 +313,7 @@
       &.tags {
         display: -webkit-box;
         -webkit-line-clamp: 1;
+        line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
         box-sizing: border-box;

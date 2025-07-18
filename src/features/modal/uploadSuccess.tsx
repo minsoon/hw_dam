@@ -15,7 +15,7 @@ export const ModalUploadSuccess = ({ isOpen, onClose }: { isOpen: boolean; onClo
       open={isOpen}
       onCancel={handleClose}
       width={600}
-      title={'Upload success'}
+      title={'Asset Successfully Uploaded'}
       footer={[
         <Button key='submit' type='primary' onClick={handleClose}>
           Done
@@ -24,8 +24,7 @@ export const ModalUploadSuccess = ({ isOpen, onClose }: { isOpen: boolean; onClo
     >
       <div className={styles.modalConfirm}>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam semper, turpis eget venenatis fermentum, ex neque
-          fringilla lectus, in laoreet urna orci nec sem. Ut ac viverra lorem, et ultrices ex.
+          Your file has been uploaded and added to the asset library. You can now preview, manage, or share the asset.
         </p>
       </div>
     </Modal>

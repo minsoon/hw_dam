@@ -13,13 +13,16 @@ export interface CollectionStore {
   collectionParams: CollectionsSearchRequest
   collectionDetailParams: CollectionDetailParams
   tabActiveKey: string
-  checkedIds: number[]
+  checkedIds: Set<number>
   pagination: {
     currentPage: number
     total: number
     totalPages: number
     limit: number
     offset: number
+    all_count: number
+    master_count: number
+    my_count: number
   }
   collectionTags: CollectionTagResponse[]
   isReady: boolean

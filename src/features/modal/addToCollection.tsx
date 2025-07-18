@@ -6,7 +6,7 @@ import {
   useCollectionsQuery,
   useCreateCollectionAssetMutation,
 } from '@/features/assets/model/useAssetQuery'
-import styles from '@/features/modal/modal.module.scss'
+import styles from './modal.module.scss'
 
 export const ModalAddToCollection = ({
   isOpen,
@@ -26,6 +26,7 @@ export const ModalAddToCollection = ({
   const [showNewTags, setShowNewTags] = useState(false)
   const [collection, setCollection] = useState<CollectionListDataResponse[]>([])
   const [isFormValid, setIsFormValid] = useState(false)
+  const [isExistingDisabled, setIsExistingDisabled] = useState(false)
 
   const { mutate: createCollectionAsset } = useCreateCollectionAssetMutation()
   const { data: collections } = useCollectionsQuery()
@@ -36,40 +37,56 @@ export const ModalAddToCollection = ({
     onClose()
   }, [onClose, form])
 
-  const handleCollectionChange = useCallback(
-    (selectedCollectionId: number) => {
-      if (selectedCollectionId) {
-        const selectedCollection = collections?.data.filter(
-          collection => collection.collection_id === selectedCollectionId
-        )
-        setCollection(selectedCollection || [])
-        form.resetFields(['name', 'description'])
-      } else {
-        form.validateFields(['name', 'description'])
-        setCollection([])
-      }
-    },
-    [collections, form]
-  )
-
   const onFieldsChange = useCallback(() => {
-    const { existingCollection, name, description, tag_ids, is_new_tags, new_tags } = form.getFieldsValue()
-    const isCollectionSelected = existingCollection !== '0'
-    const isNameAndDescriptionValid = name && description
-    const isTagsValid = is_new_tags ? new_tags && new_tags.length > 0 : tag_ids && tag_ids.length > 0
+    setTimeout(() => {
+      const { existingCollection, name, description, tag_ids, new_tags } = form.getFieldsValue()
 
-    setIsFormValid((isCollectionSelected || isNameAndDescriptionValid) && isTagsValid)
+      const isNameFilled = !!name?.trim()
+
+      const shouldDisableExisting =
+        existingCollection === null &&
+        (isNameFilled ||
+          !!description?.trim() ||
+          (Array.isArray(tag_ids) && tag_ids.length > 0) ||
+          (Array.isArray(new_tags) && new_tags.length > 0))
+
+      setIsExistingDisabled(shouldDisableExisting)
+
+      setIsFormValid(isNameFilled)
+    })
   }, [form])
 
   const handleNewCollectionChange = useCallback(
     (isChecked: boolean) => {
-      setShowNewTags(isChecked)
       if (!isChecked) {
         setNewTags([])
         form.setFieldsValue({ new_tags: [] })
       }
+      setShowNewTags(isChecked)
     },
     [form]
+  )
+  const handleCollectionChange = useCallback(
+    (selectedCollectionId: number) => {
+      const selected = collections?.data.find(collection => collection.collection_id === selectedCollectionId)
+      if (selected) {
+        form.setFieldsValue({
+          name: selected.name,
+          description: selected.description,
+          tag_ids: selected.tags.map(tag => tag.tag_id) ?? [],
+          is_new_tags: false,
+          is_master: selected.is_master === 1,
+          new_tags: [],
+        })
+        setCollection([selected])
+      } else {
+        form.resetFields(['name', 'description', 'tag_ids', 'is_new_tags', 'new_tags'])
+        setCollection([])
+      }
+
+      handleNewCollectionChange(false)
+    },
+    [collections, form, handleNewCollectionChange]
   )
 
   const handleSubmit = useCallback(() => {
@@ -123,21 +140,26 @@ export const ModalAddToCollection = ({
     <Modal open={isOpen} onCancel={handleCancel} width={800} title='Add To Collection' footer={[null]}>
       <Form form={form} onFinish={handleSubmit} onFieldsChange={onFieldsChange}>
         <div className={styles.modalForm}>
-          <dl>
+          <dl className={styles.btmLine}>
             <dt>Select from existing collection</dt>
             <dd>
-              <Form.Item name='existingCollection' initialValue={0}>
-                <Select style={{ width: '100%' }} placeholder='Select...' onChange={handleCollectionChange}>
-                  <Select.Option key='new' value={0}>
-                    New Collection
-                  </Select.Option>
+              <Form.Item name='existingCollection' initialValue={null}>
+                <Select
+                  style={{ width: '100%' }}
+                  placeholder='Select...'
+                  onChange={handleCollectionChange}
+                  disabled={isExistingDisabled}
+                >
                   {collectionOptions}
                 </Select>
               </Form.Item>
             </dd>
           </dl>
           <dl>
-            <dt>Or create new</dt>
+            <dt>
+              Or create new
+              <span className={styles.required}>*</span>
+            </dt>
             <dd>
               <Form.Item name='name'>
                 <Input placeholder='Enter collection name' disabled={collection?.length > 0} />
@@ -156,7 +178,7 @@ export const ModalAddToCollection = ({
             <dt>Collection type</dt>
             <dd>
               <Form.Item name='is_master' initialValue={true}>
-                <Radio.Group>
+                <Radio.Group disabled={collection?.length > 0}>
                   <Radio value={true}>Master Collection</Radio>
                   <Radio value={false}>My Collection</Radio>
                 </Radio.Group>
@@ -167,12 +189,19 @@ export const ModalAddToCollection = ({
             <dt>Select collection tags</dt>
             <dd>
               <Form.Item name='tag_ids'>
-                <Select mode='multiple' style={{ width: '100%' }} placeholder='Please select'>
+                <Select
+                  mode='multiple'
+                  style={{ width: '100%' }}
+                  placeholder='Please select'
+                  disabled={collection?.length > 0}
+                >
                   {tagOptions}
                 </Select>
               </Form.Item>
               <Form.Item name='is_new_tags' valuePropName='checked'>
-                <Checkbox onChange={e => handleNewCollectionChange(e.target.checked)}>Add new collection tag</Checkbox>
+                <Checkbox onChange={e => handleNewCollectionChange(e.target.checked)} disabled={collection?.length > 0}>
+                  Add new collection tag
+                </Checkbox>
               </Form.Item>
             </dd>
           </dl>

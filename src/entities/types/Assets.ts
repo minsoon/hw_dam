@@ -52,6 +52,8 @@ export interface PropertyCategoryOptionResponse {
 export interface AssetDetailResponse {
   /** 에셋 ID */
   asset_id: number;
+  /** id title */
+  id_title: string;
   /** 에셋 타입 ID */
   asset_type_id: number;
   /** 에셋 타입 이름 */
@@ -87,6 +89,9 @@ export interface AssetDetailResponse {
   view_count: number;
   /** 다운로드 수 */
   download_count: number;
+  /** access type */
+  access_type?: string;
+  is_working_file: number;
   /** 현재 버전 정보 */
   current_version: {
     /** 에셋 버전 ID */
@@ -160,6 +165,20 @@ export interface AssetDetailResponse {
         /** 옵션값 */
         option_value: string;
       }[];
+    }[];
+    /** product segments 리스트 */
+    product_segments?: {
+      /** 제품 세그먼트 ID */
+      product_segment_id: number;
+      /** 스펙명 */
+      spec_name: string;
+    }[];
+    /** product models 리스트 */
+    product_models?: {
+      /** 제품 모델 ID */
+      product_model_id: number;
+      /** 모델명 */
+      product_model: string;
     }[];
   };
   /** 파일 목록 */
@@ -243,15 +262,17 @@ export interface AssetDetailResponse {
   /** 즐겨찾기 여부 */
   is_favorite: boolean;
   /** 공유 URL */
-  share_url_anyone: string;
+  share_url_anyone: string | null;
   /** 사용자 공유 URL */
-  share_url_user: string;
+  share_url_user: string | null;
   /** 모든 버전 목록  */
   all_versions: {
     /** 버전 ID */
     asset_version_id: number;
     /** 버전 번호 */
     version: string;
+    /** 버전 숫자 */
+    version_number: number;
     /** 에셋명 */
     asset_name: string;
     /**
@@ -469,6 +490,19 @@ export interface AssetUpdateInfoResponse {
     /** 정렬 순서 */
     sort_ord: number;
   }[];
+  /** product models 리스트 */
+  product_models?: {
+    /** 제품 모델 ID */
+    product_model_id: number;
+    /** 모델명 */
+    product_model: string;
+  }[];
+  /** product segments 리스트 */
+  product_segments?: {
+    product_segment_id: number;
+    spec_name: string;
+    is_selected: number;
+  }[];
 }
 
 export interface AssetRequest {
@@ -499,6 +533,15 @@ export interface AssetRequest {
   file_info: AssetPutFileInfoRequest[];
   tags_list: AssetPutTagsListRequest[];
   properties_list: AssetPutPropertiesListRequest[];
+  /** product models */
+  product_models?: {
+    /** 제품 모델 ID */
+    product_model_id: number;
+    /** 제품 모델명 */
+    product_model: string;
+  }[];
+  /** product segments */
+  product_segments?: number[];
 }
 
 export interface EmergencyAssetRequest {
@@ -531,6 +574,15 @@ export interface EmergencyAssetRequest {
   properties_list: AssetPutPropertiesListRequest[];
   /** 변경된 파일들 */
   files?: File[];
+  /** product model */
+  product_models?: {
+    /** 제품 모델 ID */
+    product_model_id: number;
+    /** 제품 모델명 */
+    product_model: string;
+  }[];
+  /** product segment */
+  product_segments?: number[];
 }
 
 export interface AssetPutPropertiesListRequest {
@@ -583,6 +635,8 @@ export interface TagInfoResponse {
 export interface AssetListDataResponse {
   /** 에셋 ID */
   asset_id: number;
+  /** asset id_title */
+  id_title: string;
   /** 에셋 이름 */
   asset_name: string;
   /** 에셋 타입 이름 */
@@ -605,6 +659,8 @@ export interface AssetListDataResponse {
   share_url_anyone: string;
   /** 사용자 공유 URL */
   share_url_user: string;
+  /** is include working file */
+  is_working_file: number;
 }
 
 export interface AssetListResponse {
@@ -620,7 +676,20 @@ export interface AssetListResponse {
     limit: number;
     /** 현재 페이지의 오프셋 */
     offset: number;
+    /** asset total 카운트 */
+    assets_count: number;
+    /** 즐겨찾기 카운트 */
+    favorite_count: number;
   };
+}
+
+export interface ProductSegmentsListResponse {
+  /** product segment ID */
+  product_segment_id: number;
+  /** product name */
+  spec_name: string;
+  /** is selected */
+  is_selected?: number;
 }
 
 export interface RefsTagInfoResponse {
@@ -630,6 +699,8 @@ export interface RefsTagInfoResponse {
   tag_name: string;
   /** 부모 태그 ID */
   parent_tag_id: number;
+  /** is ai tag */
+  is_ai_tag?: number;
   /** 자식 태그 목록 */
   child_tags: {
     /** 태그 ID */
@@ -646,7 +717,8 @@ export interface RefsTagInfoResponse {
 export interface AssetRefsResponse {
   tags: RefsTagInfoResponse[];
   properties: PropertyCategoryOptionResponse[];
-  assetTypes: AssetListTypeResponse[];
+  asset_types?: AssetListTypeResponse[];
+  product_segments: ProductSegmentsListResponse[];
   /** 현재 asset type에 맞는 custom variation 목록 */
   custom_variations?: {
     /** 변형 ID */
@@ -792,6 +864,15 @@ export interface AssetPostRequest {
       /** @example 3 */
       property_category_id: number;
     }[];
+    /** product models */
+    product_models?: {
+      /** @example 1 */
+      product_model_id: number;
+      /** @example "제품 모델명" */
+      product_model: string;
+    }[];
+    /** product segments */
+    product_segments?: number[];
   }[];
   /** 업로드할 파일 */
   files: File[];

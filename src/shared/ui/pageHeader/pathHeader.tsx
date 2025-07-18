@@ -15,6 +15,7 @@ export const PathHeader = ({
   isNumericId,
   onTabChange,
   handleGoBack,
+  pathClick,
   rightSlot,
   isMaster,
   isShare,
@@ -25,7 +26,7 @@ export const PathHeader = ({
   >
     <div className={styles.fixWidth}>
       <div className={styles.title}>
-        {isShare && (
+        {isShare && isNumericId && (
           <div className={styles.closeButton}>
             <Button
               color='default'
@@ -40,7 +41,9 @@ export const PathHeader = ({
           <TextLoading isDark={!isNumericId} />
         ) : (
           <dl>
-            <dt>{path}</dt>
+            <dt onClick={() => pathClick?.()} className={`${pathClick ? styles.pathClick : ''}`}>
+              {path}
+            </dt>
             <dd>
               {title}
               {isMaster && <p>Master</p>}

@@ -16,6 +16,7 @@ export interface DetailHeaderProps {
 export interface SettingsHeaderProps {
   title: string
   path: string
+  pathClick?: () => void
   tabs?: { key: string; label: string }[]
   activeTab?: string
   isNumericId?: boolean

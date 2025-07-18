@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import { Image, Skeleton } from 'antd'
 import { CollectionListDataResponse } from '@/entities/types/Collections'
 import { MainCollectionsList } from '@/entities/types/Main'
 import { CardMenu } from '@/features/collections/ui/card/cardMenu'
@@ -13,18 +14,34 @@ export const CollectionsHomeCard: React.FC<{
 }> = ({ item, type, refetch }) => {
   const router = useRouter()
 
+  const thumbnails = useMemo(() => {
+    return Array.from({ length: 3 }).map((_, index) => ({
+      key: index,
+      imageUrl: item.thumbnails?.[index] || '/images/logo-default.png',
+      hasImage: !!item.thumbnails?.[index],
+    }))
+  }, [item.thumbnails])
+
   return (
     <div className={type === 'recent' ? styles.recentCard : styles.card}>
       <div className={styles.cardLink} onClick={() => router.push(`/collections/${item.collection_id}`)}>
         <div className={styles.images}>
-          {Array.from({ length: 3 }).map((_, index) => (
-            <p
-              key={index}
-              className={`${item.thumbnails?.[index] ? '' : styles.notImage}`}
-              style={{
-                backgroundImage: `url(${item.thumbnails?.[index] || '/images/not_image.png'})`,
-              }}
-            ></p>
+          {thumbnails.map(({ key, imageUrl, hasImage }) => (
+            <div key={key} className={`${styles.imageBox} ${hasImage ? '' : styles.notImage}`}>
+              {hasImage && (
+                <Image
+                  src={imageUrl}
+                  alt={`썸네일${key + 1}`}
+                  className={hasImage ? '' : styles.notImage}
+                  placeholder={
+                    <div className={styles.imageSkeleton}>
+                      <Skeleton.Image active />
+                    </div>
+                  }
+                  preview={false}
+                />
+              )}
+            </div>
           ))}
         </div>
         <dl>

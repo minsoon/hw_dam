@@ -30,7 +30,7 @@ const AssetModify = ({ id, isEmergencyOverride }: { id: string; isEmergencyOverr
           ) : (
             <>
               <AssetGallery isImageType={isImageType} isEmergencyOverride={isEmergencyOverride} />
-              <AssetEdit isImageType={isImageType} />
+              <AssetEdit isImageType={isImageType} isEmergencyOverride={isEmergencyOverride} />
             </>
           )}
         </div>

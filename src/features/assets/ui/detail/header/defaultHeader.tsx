@@ -32,6 +32,7 @@ const DefaultHeader = ({
   const { asset, currentVersionId } = useAssetDetailStore()
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE)
   const router = useRouter()
+  const isAuto = asset?.default_type === 'Auto'
 
   const handleGoBack = useCallback(() => {
     if (hasToken) {
@@ -102,7 +103,7 @@ const DefaultHeader = ({
               <Skeleton.Button />
             ) : (
               <>
-                {currentVersionId === null ? (
+                {currentVersionId === null && asset?.current_version?.is_confidential === 0 ? (
                   <>
                     <AssetActions refetch={refetch} />
                     <Button icon={<ShareAltOutlined />} onClick={() => setActiveModal(ModalType.SHARE)}>
@@ -115,8 +116,8 @@ const DefaultHeader = ({
                     onClick={() => setActiveModal(ModalType.DELETE_ASSET_VERSION)}
                   ></Button>
                 )}
-                <VersionHistory />
-                {currentVersionId === null && (
+                {!isAuto && <VersionHistory />}
+                {currentVersionId === null && !isAuto && (
                   <Button
                     color='default'
                     variant='solid'
@@ -134,6 +135,7 @@ const DefaultHeader = ({
       <Modal
         type={activeModal}
         isOpen={activeModal !== ModalType.NONE}
+        title={activeModal === ModalType.SHARE ? 'Share link' : ''}
         item={asset!}
         onClose={() => setActiveModal(ModalType.NONE)}
       />

@@ -15,6 +15,9 @@ const initialCollectionState = {
     totalPages: 0,
     limit: 20,
     offset: 0,
+    all_count: 0,
+    master_count: 0,
+    my_count: 0,
   },
   collectionParams: {
     page: 1,
@@ -26,7 +29,7 @@ const initialCollectionState = {
   },
   collectionTags: [],
   tabActiveKey: 'all',
-  checkedIds: [],
+  checkedIds: new Set<number>(),
   isReady: false,
 }
 
@@ -36,7 +39,7 @@ const initialCollectionDetailState = {
     collection_id: 0,
     sort: 'newest' as const,
   },
-  checkedIds: [],
+  checkedIds: new Set<number>(),
 }
 export const useCollectionStore = create<CollectionStore>()(set => ({
   ...initialCollectionState,
@@ -53,13 +56,15 @@ export const useCollectionStore = create<CollectionStore>()(set => ({
   setChecked: (checked: number | number[]) =>
     set(state => {
       if (Array.isArray(checked)) {
-        return { checkedIds: checked }
+        return { checkedIds: new Set(checked) }
       } else {
-        return {
-          checkedIds: state.checkedIds.includes(checked)
-            ? state.checkedIds.filter(id => id !== checked)
-            : [...state.checkedIds, checked],
+        const newSet = new Set(state.checkedIds)
+        if (newSet.has(checked)) {
+          newSet.delete(checked)
+        } else {
+          newSet.add(checked)
         }
+        return { checkedIds: newSet }
       }
     }),
   setCollectionParams: (params: Partial<CollectionsSearchRequest>) =>

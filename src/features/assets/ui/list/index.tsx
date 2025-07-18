@@ -13,24 +13,39 @@ import { DefaultHeader } from '@/shared/ui/pageHeader/defaultHeader'
 import { SpinLoading } from '@/shared/ui/spinLoading'
 
 const Assets = () => {
-  const { tabActiveKey, setActiveTab, setAssetParams, removeStore, assetParams, isReady, markReady } = useAssetStore()
-  const { isLoading, refetch } = useAssetQuery(assetParams, {
+  const {
+    tabActiveKey,
+    setActiveTab,
+    setAssetParams,
+    removeStore,
+    assetParams,
+    isReady,
+    markReady,
+    pagination,
+    setFilters,
+  } = useAssetStore()
+
+  const { isLoading, refetch: originalRefetch } = useAssetQuery(assetParams, {
     enabled: isReady,
   })
+  const refetch = useCallback(() => {
+    originalRefetch()
+  }, [originalRefetch])
   const searchParams = useSearchParams()
   const keyword = searchParams.get('keyword')
+  const assetTypeId = searchParams.get('asset_type_id')
 
   const handleTabChange = useCallback(
     (tab: string) => {
       setActiveTab(tab)
-      setAssetParams({ is_favorite: tab === 'favourites' ? 'true' : 'false' })
+      setAssetParams({ is_favorite: tab === 'favourites' ? 'true' : 'false', page: 1 })
     },
     [setActiveTab, setAssetParams]
   )
 
   const handleSearch = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setAssetParams({ keyword: event.target.value })
+      setAssetParams({ keyword: event.target.value, page: 1 })
     },
     [setAssetParams]
   )
@@ -38,8 +53,15 @@ const Assets = () => {
     if (keyword) {
       setAssetParams({ keyword })
     }
+    if (assetTypeId) {
+      setFilters('Assettype', {
+        title: 'Asset type',
+        data: [Number(assetTypeId)],
+      })
+      setAssetParams({ asset_types: assetTypeId })
+    }
     markReady()
-  }, [keyword, setAssetParams, markReady])
+  }, [keyword, setAssetParams, markReady, assetTypeId, setFilters])
 
   useEffect(() => {
     return () => removeStore()
@@ -50,8 +72,8 @@ const Assets = () => {
       <DefaultHeader
         title='Assets'
         tabs={[
-          { key: 'all', label: 'All assets (#)' },
-          { key: 'favourites', label: 'Favourites (#)' },
+          { key: 'all', label: `All assets (${pagination.assets_count || 0})` },
+          { key: 'favourites', label: `Favourites (${pagination.favorite_count || 0})` },
         ]}
         activeTab={tabActiveKey}
         onTabChange={handleTabChange}

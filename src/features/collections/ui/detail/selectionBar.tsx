@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button } from 'antd'
 import { DeleteOutlined, DownloadOutlined, PlusOutlined } from '@ant-design/icons'
 import { useCollectionStore } from '@/features/collections/model/collectionStore'
@@ -13,15 +13,23 @@ export const SelectionDetailBar = ({ refetch }: { refetch: () => void }) => {
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE)
   const { selectAll, deselectAll } = useSelectionActions(collectionDetail?.assets, 'asset_id', setChecked)
 
+  const checkedAssets = useMemo(() => {
+    return collectionDetail?.assets.filter(asset => checkedIds.has(asset.asset_id)) ?? []
+  }, [collectionDetail?.assets, checkedIds])
+
+  const isWorkingFile = useMemo(() => {
+    return checkedAssets.some(asset => asset.is_working_file === 1) ? 1 : 0
+  }, [checkedAssets])
+
   useEffect(() => {
-    setIsActive(checkedIds.length > 0)
+    setIsActive(checkedIds.size > 0)
   }, [checkedIds, collectionDetail])
 
   return (
     <>
       <SelectionBar
-        isActive={isActive && checkedIds.length > 0}
-        count={checkedIds.length}
+        isActive={isActive && checkedIds.size > 0}
+        count={checkedIds.size}
         setIsActive={setIsActive}
         secondaryActions={
           <>
@@ -64,7 +72,8 @@ export const SelectionDetailBar = ({ refetch }: { refetch: () => void }) => {
         onClose={() => setActiveModal(ModalType.NONE)}
         refetch={refetch!}
         collectionId={collectionDetail?.collection_id || 0}
-        assetIds={checkedIds}
+        assetIds={Array.from(checkedIds)}
+        isWorkingFile={isWorkingFile}
       />
     </>
   )

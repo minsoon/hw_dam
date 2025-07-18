@@ -38,6 +38,7 @@ const Header = ({
       <PathHeader
         title={collectionDetail?.name || ''}
         path='All collections'
+        pathClick={() => router.push('/collections')}
         isMaster={!!collectionDetail?.is_master}
         isShare={isShare}
         isNumericId={isNumericId}
@@ -65,6 +66,8 @@ const Header = ({
                       size='middle'
                       isEdit={false}
                       collection={collectionDetail!}
+                      collectionIds={collectionDetail?.collection_id}
+                      isBack={true}
                     />
                     <Button icon={<ShareAltOutlined />} onClick={() => setActiveModal(ModalType.SHARE)}>
                       Share
@@ -93,6 +96,7 @@ const Header = ({
         collection={collectionDetail!}
         downloadType={'collection'}
         collectionId={collectionDetail?.collection_id}
+        isWorkingFile={collectionDetail?.is_working_file}
       />
     </>
   )

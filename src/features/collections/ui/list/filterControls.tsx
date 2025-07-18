@@ -8,11 +8,11 @@ import styles from './filterControls.module.scss'
 
 export const FilterControls = () => {
   const { collectionTags, setCollectionParams } = useCollectionStore()
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [selectedTags, setSelectedTags] = useState<number[]>([])
   const handleChange = useCallback(
-    () => (value: string[]) => {
+    () => (value: number[]) => {
       setSelectedTags(value)
-      setCollectionParams({ tag_ids: value.join(',') })
+      setCollectionParams({ tag_ids: value.join(','), page: 1 })
     },
     [setCollectionParams]
   )

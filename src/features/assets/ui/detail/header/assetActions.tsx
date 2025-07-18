@@ -135,6 +135,7 @@ export const AssetActions: React.FC<{ refetch: () => void; menuItems?: ModalType
         assetIds={asset?.asset_id}
         item={asset!}
         downloadType={'asset'}
+        isWorkingFile={asset?.is_working_file}
       />
     </div>
   )

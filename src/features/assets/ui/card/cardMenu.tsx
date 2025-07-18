@@ -173,6 +173,7 @@ export const CardMenu: React.FC<{
         assetIds={item.asset_id}
         collectionId={collectionId}
         downloadType={downloadType}
+        isWorkingFile={item.is_working_file}
         item={item}
         refetch={refetch}
       />

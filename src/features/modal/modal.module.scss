@@ -34,10 +34,20 @@
     &:last-child {
       padding-bottom: 0;
     }
+    &.btmLine {
+      margin-bottom: 15px;
+      border-bottom: 1px solid $border-light;
+    }
     dt {
       padding-bottom: 8px;
       font-size: $font-label;
       color: $text-secondary;
+      span {
+        &.required {
+          padding-left: 3px;
+          color: $primary;
+        }
+      }
     }
     dd {
       :global(.ant-checkbox-wrapper) {
@@ -143,5 +153,26 @@
       display: block;
       padding: 5px 20px 10px 20px;
     }
+  }
+}
+.modalUploaderLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  gap: 16px;
+  .uploadText {
+    color: $bg-surface-800;
+    animation: fadeIn 1s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
   }
 }

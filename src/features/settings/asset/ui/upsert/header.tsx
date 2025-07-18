@@ -21,6 +21,7 @@ const SettingAssetUpsertHeader = ({ onSubmit, id }: { onSubmit: () => Promise<bo
     <PathHeader
       title={`${id ? 'Edit' : 'Create new'} asset type`}
       path='Settings / Asset management'
+      pathClick={() => router.back()}
       rightSlot={
         <>
           <Space>

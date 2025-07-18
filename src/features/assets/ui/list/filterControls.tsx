@@ -9,20 +9,23 @@ import { mapToSelectOptions } from '@/shared/lib/optionMappers'
 import { SearchChecked } from '@/shared/ui/searchChecked'
 import { SelectChecked } from '@/shared/ui/selectChecked'
 import { Sort, type SortValue } from '@/shared/ui/sort'
+import { useAssetFilterSubmit } from '../../model/useAssetFilterSubmit'
 import styles from './filterControls.module.scss'
 
 export const FilterControls = () => {
   const { filters, filterOptions, setFilters, setAssetParams } = useAssetStore()
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE)
+  const submitFilters = useAssetFilterSubmit()
 
   const handleChange = useCallback(
-    (key: string) => (value: string[]) => {
+    (key: string) => (value: number[]) => {
       setFilters(key.replace(/\s+/g, ''), {
         title: key,
         data: value,
       })
+      submitFilters()
     },
-    [setFilters]
+    [setFilters, submitFilters]
   )
   const handleSortChange = useCallback(
     (value: SortValue) => {
@@ -37,13 +40,17 @@ export const FilterControls = () => {
       <div className={styles.filter}>
         <SelectChecked
           title='Asset type'
-          options={mapToSelectOptions(filterOptions?.assetTypes, 'asset_type_id', 'name')}
+          options={mapToSelectOptions(filterOptions?.asset_types, 'asset_type_id', 'name')}
           onChange={handleChange}
           value={Array.isArray(filters?.Assettype?.data) ? filters.Assettype.data : []}
         />
         <SearchChecked
           title='Tags'
-          options={mapToSelectOptions(filterOptions?.tags, 'tag_id', 'tag_name')}
+          options={mapToSelectOptions(
+            filterOptions?.tags?.flatMap(tag => tag.child_tags || []),
+            'tag_id',
+            'tag_name'
+          )}
           onChange={handleChange}
           value={Array.isArray(filters?.Tags?.data) ? filters.Tags.data : []}
         />

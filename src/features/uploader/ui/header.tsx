@@ -1,10 +1,10 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Button, Skeleton, Tooltip, message } from 'antd'
-import { QuestionCircleOutlined, RedoOutlined, SyncOutlined } from '@ant-design/icons'
+import { QuestionCircleOutlined, RedoOutlined } from '@ant-design/icons'
 import { ModalType } from '@/features/modal'
 import { Modal } from '@/features/modal'
 import { useUploaderStore } from '@/features/uploader/model/uploaderStore'
@@ -17,25 +17,27 @@ const UploaderHeader = () => {
   const { assets, files, assetTypeDetail, assetTypeDetailLoading, clearAssets } = useUploaderStore()
   const router = useRouter()
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const isAuto = assetTypeDetail?.default_type === 'Auto'
+
   const { mutate: createAsset } = useCreateAssetQuery()
-  const requiredFields: (keyof AssetPostInfo)[] = [
-    'asset_name',
-    'description',
-    'owner_name',
-    'owner_email',
-    'agency_name',
-    'agency_contact_name',
-    'copyright',
-  ]
-  const isValid =
-    assets.length > 0 &&
-    (isAuto
-      ? assets.every(asset => requiredFields.every(field => asset[field]?.toString().trim() !== ''))
-      : requiredFields.every(field => assets[0]?.[field]?.toString().trim() !== '') &&
-        files.some(file => file.is_thumbnail === 1))
-  // files.every(file => file.variation_id != null))
+
+  const isValid = useMemo(() => {
+    if (!assetTypeDetail || assets.length === 0) return false
+
+    const requiredFields: (keyof AssetPostInfo)[] = ['asset_name']
+    const isAuto = assetTypeDetail.default_type === 'Auto'
+
+    const allAssetsHaveName = assets.every(asset =>
+      requiredFields.every(field => asset[field]?.toString().trim() !== '')
+    )
+    const firstAssetHasName = requiredFields.every(field => assets[0]?.[field]?.toString().trim() !== '')
+    const hasThumbnail = files.some(file => file.is_thumbnail === 1)
+    const allFilesHaveVariation = files.every(file => file.variation_id != null)
+
+    if (isAuto) {
+      return allAssetsHaveName
+    }
+    return firstAssetHasName && hasThumbnail && allFilesHaveVariation
+  }, [assets, files, assetTypeDetail])
 
   const handleRefresh = useCallback(() => {
     clearAssets()
@@ -60,17 +62,19 @@ const UploaderHeader = () => {
     files.forEach(file => {
       formData.append('files', file.file)
     })
-
-    setIsSubmitting(true)
+    setActiveModal(ModalType.UPLOADER_LOADING)
     createAsset(formData, {
       onSuccess: () => {
-        setActiveModal(ModalType.UPLOAD_SUCCESS)
+        setActiveModal(ModalType.NONE)
+        setTimeout(() => {
+          setActiveModal(ModalType.UPLOAD_SUCCESS)
+        }, 100)
       },
       onError: () => {
         message.error('Failed to create asset')
       },
       onSettled: () => {
-        setIsSubmitting(false)
+        setActiveModal(ModalType.NONE)
       },
     })
   }, [createAsset, assetTypeDetail, assets, files])
@@ -123,9 +127,8 @@ const UploaderHeader = () => {
                 className={styles.submit}
                 onClick={handleCreateAsset}
                 disabled={!isValid}
-                loading={isSubmitting && { icon: <SyncOutlined style={{ fontSize: '16px' }} spin /> }}
               >
-                {isSubmitting ? 'Saving..' : 'Save assets'}
+                Save assets
               </Button>
             )}
           </>

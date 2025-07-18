@@ -20,12 +20,14 @@ const initialState = {
     totalPages: 0,
     limit: 20,
     offset: 0,
+    assets_count: 0,
+    favorite_count: 0,
   },
   isReady: false,
   tabActiveKey: 'all',
   filters: null,
   filterOptions: null,
-  checkedIds: [],
+  checkedIds: new Set<number>(),
 }
 
 export const useAssetStore = create<AssetState>()(set => ({
@@ -38,16 +40,19 @@ export const useAssetStore = create<AssetState>()(set => ({
         pagination: assets.pagination,
       }
     }),
+
   setChecked: (checked: number | number[]) =>
     set(state => {
       if (Array.isArray(checked)) {
-        return { checkedIds: checked }
+        return { checkedIds: new Set(checked) }
       } else {
-        return {
-          checkedIds: state.checkedIds.includes(checked)
-            ? state.checkedIds.filter(id => id !== checked)
-            : [...state.checkedIds, checked],
+        const newSet = new Set(state.checkedIds)
+        if (newSet.has(checked)) {
+          newSet.delete(checked)
+        } else {
+          newSet.add(checked)
         }
+        return { checkedIds: newSet }
       }
     }),
   setAssetParams: (params: Partial<AssetListRequest>) =>
@@ -85,7 +90,7 @@ export const useAssetStore = create<AssetState>()(set => ({
         delete newFilters[key]
         return { filters: newFilters }
       } else {
-        return { filters: null }
+        return { filters: undefined }
       }
     }),
   removeStore: () => set({ ...initialState }),

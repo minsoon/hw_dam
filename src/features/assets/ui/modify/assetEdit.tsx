@@ -10,7 +10,10 @@ import { formatDateTime } from '@/shared/lib/formatDate'
 import { InfoEditPanel } from '@/shared/ui/editPanel/assetEditPanel'
 import styles from './assetEdit.module.scss'
 
-export const AssetEdit: React.FC<{ isImageType: boolean }> = ({ isImageType }) => {
+export const AssetEdit: React.FC<{ isImageType: boolean; isEmergencyOverride?: boolean }> = ({
+  isImageType,
+  isEmergencyOverride,
+}) => {
   const { asset, panelItems } = useAssetUpdateStore()
   const { current_version } = asset || {}
   const searchParams = useSearchParams()
@@ -34,7 +37,7 @@ export const AssetEdit: React.FC<{ isImageType: boolean }> = ({ isImageType }) =
         </dl>
       </div>
       <div className={styles.info}>
-        <InfoEditPanel isImageType={isImageType} viewType={'edit'} />
+        <InfoEditPanel isImageType={isImageType} viewType={'edit'} isEmergencyOverride={isEmergencyOverride} />
         <Collapse
           className={styles.collapse}
           bordered={false}

@@ -37,7 +37,7 @@ export const ModalDeleteSelected = ({
         onSuccess: () => {
           refetch()
           handleClose()
-          const isSingleCheckedId = !isArray && checkedIds.length === 1 && checkedIds[0] === assetIds
+          const isSingleCheckedId = !isArray && checkedIds.size === 1 && checkedIds.has(Number(assetIds))
           if (isArray || isSingleCheckedId) {
             setChecked([])
           }

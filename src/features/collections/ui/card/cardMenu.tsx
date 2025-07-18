@@ -13,11 +13,13 @@ export const CardMenu: React.FC<{
   isEdit?: boolean
   refetch?: () => void
   menuItems?: ModalType[]
+  isBack?: boolean
 }> = ({
   size = 'small',
   collection,
   collectionIds,
   isEdit,
+  isBack,
   refetch,
   menuItems = [ModalType.EDIT_COLLECTION, ModalType.DUPLICATE_COLLECTION, ModalType.SHARE, ModalType.DELETE_COLLECTION],
 }) => {
@@ -96,6 +98,7 @@ export const CardMenu: React.FC<{
         collectionIds={collectionIds}
         isEdit={isEdit}
         refetch={refetch}
+        isBack={isBack}
         onClose={() => setActiveModal(ModalType.NONE)}
       />
     </div>

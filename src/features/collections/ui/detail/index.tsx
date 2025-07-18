@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useCollectionStore } from '@/features/collections/model/collectionStore'
 import {
   useCollectionDetailByHashQuery,
@@ -25,7 +25,12 @@ const CollectionDetail = ({ id, isShare, hasToken }: { id: string; isShare: bool
   )
   const collectionByHashQuery = useCollectionDetailByHashQuery({ hash: id }, { enabled: !isNumericId })
 
-  const { isLoading, refetch } = isNumericId ? collectionByIdQuery : collectionByHashQuery
+  const { isLoading, refetch: originalRefetch } = isNumericId ? collectionByIdQuery : collectionByHashQuery
+
+  const refetch = useCallback(() => {
+    originalRefetch()
+  }, [originalRefetch])
+
   useEffect(() => {
     setCollectionDetailParams({ collection_id: Number(id) })
     return () => {
@@ -37,11 +42,11 @@ const CollectionDetail = ({ id, isShare, hasToken }: { id: string; isShare: bool
     <>
       <Header isShare={isShare} hasToken={hasToken} isNumericId={isNumericId} isLoading={isLoading} refetch={refetch} />
       <div className={`${isShare ? styles.shareContainer : ''} ${!isNumericId ? styles.darkContainer : ''}`}>
+        <Toolbar isShare={isShare} isNumericId={isNumericId} />
         {isLoading ? (
           <SpinLoading />
         ) : (
           <>
-            <Toolbar isShare={isShare} isNumericId={isNumericId} />
             <div className={styles.container}>
               <CardList refetch={refetch} isShare={isShare} hasToken={hasToken} isNumericId={isNumericId} />
               <CollectionInfo hasToken={hasToken} isNumericId={isNumericId} />

@@ -13,6 +13,8 @@ export interface CollectionAssetDeleteRequest {
 export interface CollectionAssetsDataResponse {
   /** 에셋 ID */
   asset_id: number;
+  /** id title */
+  id_title: string;
   /** 에셋 이름 */
   asset_name: string;
   /** 에셋 타입 이름 */
@@ -33,6 +35,7 @@ export interface CollectionAssetsDataResponse {
   share_url_anyone: string;
   /** 사용자 공유 URL */
   share_url_user: string;
+  is_working_file: number;
 }
 
 export interface CollectionsSearchRequest {
@@ -80,6 +83,8 @@ export interface CollectionAssetListDataResponse {
   share_url_user: string;
   /** 공용 공유 URL */
   share_url_anyone: string;
+  /** access type */
+  access_type?: string;
   /** 파일 개수 */
   file_count: number;
   /** 조회 수 */
@@ -92,6 +97,7 @@ export interface CollectionAssetListDataResponse {
   deleted_at: string;
   /** 삭제자 */
   deleted_by: string;
+  is_working_file: number;
   tags: {
     /** 태그 ID */
     tag_id: number;
@@ -245,6 +251,12 @@ export interface CollectionsListResponse {
     limit: number;
     /** 오프셋 */
     offset: number;
+    /** All Collections Count */
+    all_count: number;
+    /** Master Collections Count */
+    master_count: number;
+    /** My Collections Count */
+    my_count: number;
   };
 }
 

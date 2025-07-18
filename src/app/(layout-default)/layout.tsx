@@ -1,7 +1,7 @@
 'use client'
 
-import { Header } from '@/widgets/header/index'
 import { Footer } from '@/widgets/footer/index'
+import { Header } from '@/widgets/header'
 
 const WithHeaderLayout = ({ children }: { children: React.ReactNode }) => {
   return (

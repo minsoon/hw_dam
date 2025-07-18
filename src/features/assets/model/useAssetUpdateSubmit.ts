@@ -12,7 +12,7 @@ export const useAssetUpdateSubmit = () => {
 
   return useCallback(async () => {
     if (!asset) return false
-    const { current_version, tags, properties, files } = asset
+    const { current_version, tags, properties, files, product_models, product_segments } = asset
 
     try {
       const payload = {
@@ -55,6 +55,10 @@ export const useAssetUpdateSubmit = () => {
               property_category_id: parent.property_category_id,
             }))
         ),
+        product_models: product_models,
+        product_segments: product_segments
+          ?.filter(segment => segment.is_selected === 1)
+          .map(segment => segment.product_segment_id),
       }
       await updateMutation.mutateAsync(payload)
       return true
@@ -74,7 +78,7 @@ export const useAssetCreateSubmit = (isEmergencyOverride?: boolean) => {
 
   return useCallback(async () => {
     if (!asset) return false
-    const { current_version, tags, properties, files: file_info } = asset
+    const { current_version, tags, properties, files: file_info, product_models, product_segments } = asset
 
     try {
       const formData = new FormData()
@@ -137,6 +141,14 @@ export const useAssetCreateSubmit = (isEmergencyOverride?: boolean) => {
           )
         )
       )
+      formData.append('product_models', JSON.stringify(product_models))
+      formData.append(
+        'product_segments',
+        JSON.stringify(
+          product_segments?.filter(segment => segment.is_selected === 1).map(segment => segment.product_segment_id)
+        )
+      )
+
       files.forEach(file => {
         formData.append('files', file.file)
       })

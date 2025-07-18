@@ -15,17 +15,21 @@ export const fetchAssets = async (payload: AssetListRequest): Promise<AssetListR
   return data
 }
 
-export const fetchAssetById = async (id: number, version_id?: number | null): Promise<AssetDetailResponse> => {
+export const fetchAssetById = async (id: number, v?: number | null): Promise<AssetDetailResponse> => {
   const { data } = await apiInstance.get(`/api/v1/assets/${id}`, {
     params: {
-      version_id: version_id,
+      v: v,
     },
   })
   return data
 }
 
-export const fetchAssetByHash = async (hash: string): Promise<AssetDetailResponse> => {
-  const { data } = await apiInstance.get(`/api/v1/assets/hash/${hash}`)
+export const fetchAssetByHash = async (hash: string, v?: string | null): Promise<AssetDetailResponse> => {
+  const { data } = await apiInstance.get(`/api/v1/assets/hash/${hash}`, {
+    params: {
+      v: v,
+    },
+  })
   return data
 }
 
@@ -41,6 +45,7 @@ export const fetchUpdateAssetInfo = async (id: number): Promise<AssetUpdateInfoR
 
 export const fetchCreateAsset = async (formData: FormData): Promise<boolean> => {
   const { data } = await apiInstance.post(`/api/v1/assets`, formData, {
+    timeout: 1000 * 60 * 10,
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -50,6 +55,7 @@ export const fetchCreateAsset = async (formData: FormData): Promise<boolean> => 
 
 export const fetchCreateAssetVersion = async (id: number, formData: FormData): Promise<boolean> => {
   const { data } = await apiInstance.post(`/api/v1/assets/${id}/new-version`, formData, {
+    timeout: 1000 * 60 * 10,
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -59,6 +65,7 @@ export const fetchCreateAssetVersion = async (id: number, formData: FormData): P
 
 export const fetchCreateAssetEmergency = async (id: number, formData: FormData): Promise<boolean> => {
   const { data } = await apiInstance.put(`/api/v1/assets/${id}/emergency`, formData, {
+    timeout: 1000 * 60 * 10,
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -91,6 +98,7 @@ export const fetchAssetDownloadFile = async (payload: {
   file_id: number
 }): Promise<{ data: Blob; contentType: string }> => {
   const response = await apiInstance.get(`/api/v1/download/${payload.asset_id}/file/${payload.file_id}`, {
+    timeout: 1000 * 60 * 10,
     responseType: 'blob',
   })
   const contentType = response.headers['content-type']
@@ -106,6 +114,7 @@ export const fetchAssetsDownload = async (payload: {
   is_with_working: boolean
 }): Promise<{ data: Blob; fileName: string }> => {
   const response = await apiInstance.get(`/api/v1/download/assets`, {
+    timeout: 1000 * 60 * 10,
     params: { asset_ids: payload.asset_ids, is_with_working: payload.is_with_working },
     responseType: 'blob',
   })
@@ -125,6 +134,7 @@ export const fetchAssetVersionDownload = async (payload: {
   asset_version_id: number
 }): Promise<{ data: Blob; fileName: string }> => {
   const response = await apiInstance.get(`/api/v1/download/${payload.asset_id}/version/${payload.asset_version_id}`, {
+    timeout: 1000 * 60 * 10,
     responseType: 'blob',
   })
 

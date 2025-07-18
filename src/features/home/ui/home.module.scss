@@ -10,7 +10,7 @@
     justify-content: center;
     height: 280px;
     border-radius: 8px;
-    background: url('/images/bg_search.png') no-repeat 0 30% / 100% auto;
+    background: $primary url('/images/bg_search.png') no-repeat 0 40% / 100% auto;
     dt {
       padding-bottom: 24px;
       color: $text-white;
@@ -86,6 +86,9 @@
         }
         .slick-slide {
           padding: 0 7.5px;
+        }
+        .slick-track {
+          margin: 0;
         }
       }
     }

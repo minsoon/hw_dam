@@ -1,4 +1,13 @@
-export type AssetEditPanelKey = 'tag' | 'select' | 'checkbox' | 'checkboxGroup' | 'radio' | 'contacts' | 'copyright'
+export type AssetEditPanelKey =
+  | 'tag'
+  | 'select'
+  | 'productModel'
+  | 'productSegment'
+  | 'checkbox'
+  | 'checkboxGroup'
+  | 'radio'
+  | 'contacts'
+  | 'copyright'
 
 export type ViewType = 'edit' | 'upload'
 export interface PanelData {
@@ -28,6 +37,8 @@ export interface CheckboxGroupPanelProps {
 export interface PanelRendererWithAsset {
   tag: (props: PanelItemsProps) => JSX.Element
   select: (props: PanelItemsProps) => JSX.Element
+  productModel: (props: PanelItemsProps) => JSX.Element
+  productSegment: (props: PanelItemsProps) => JSX.Element
   radio: (props: PanelItemsProps) => JSX.Element
   checkbox: (props: PanelItemsProps) => JSX.Element
   checkboxGroup: (props: CheckboxGroupPanelProps) => JSX.Element

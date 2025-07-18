@@ -22,6 +22,8 @@ export interface MainAssetTypesList {
 export interface MainAssetsList {
   /** 에셋 ID */
   asset_id: number;
+  /** id title */
+  id_title: string;
   /** 에셋 이름 */
   asset_name: string;
   /** 썸네일 URL */
@@ -44,6 +46,8 @@ export interface MainAssetsList {
   share_url_anyone: string;
   /** 공유 URL (User) */
   share_url_user: string;
+  /** is include working file */
+  is_working_file: number;
 }
 
 export interface MainCollectionsList {

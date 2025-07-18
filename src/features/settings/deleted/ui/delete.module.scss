@@ -27,8 +27,7 @@
     background: no-repeat center / cover;
 
     &.notImage {
-      background-color: $bg-surface-200;
-      background-size: 40% auto;
+      background-size: 30% auto;
     }
   }
   .collectionImage {
@@ -44,8 +43,7 @@
       background: no-repeat center / cover;
 
       &.notImage {
-        background-color: $bg-surface-200;
-        background-size: 40% auto;
+        background-size: 30% auto;
       }
       &:nth-child(2),
       &:nth-child(3) {

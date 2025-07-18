@@ -16,24 +16,36 @@ import { DefaultHeader } from '@/shared/ui/pageHeader/defaultHeader'
 import { SpinLoading } from '@/shared/ui/spinLoading'
 
 const Collections = () => {
-  const { tabActiveKey, collectionParams, setCollectionParams, setActiveTab, removeCollection, isReady, markReady } =
-    useCollectionStore()
+  const {
+    tabActiveKey,
+    collectionParams,
+    setCollectionParams,
+    setActiveTab,
+    removeCollection,
+    isReady,
+    markReady,
+    pagination,
+  } = useCollectionStore()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { isLoading, refetch } = useCollectionQuery(collectionParams, { enabled: isReady })
+  const { isLoading, refetch: originalRefetch } = useCollectionQuery(collectionParams, { enabled: isReady })
+  const refetch = useCallback(() => {
+    originalRefetch()
+  }, [originalRefetch])
+
   const searchParams = useSearchParams()
   const keyword = searchParams.get('keyword')
 
   const handleTabChange = useCallback(
     (tab: string) => {
       setActiveTab(tab)
-      setCollectionParams({ search_type: tab === 'all' ? undefined : (tab as 'master' | 'my') })
+      setCollectionParams({ search_type: tab === 'all' ? undefined : (tab as 'master' | 'my'), page: 1 })
     },
     [setActiveTab, setCollectionParams]
   )
 
   const handleSearch = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setCollectionParams({ keyword: event.target.value })
+      setCollectionParams({ keyword: event.target.value, page: 1 })
     },
     [setCollectionParams]
   )
@@ -58,9 +70,9 @@ const Collections = () => {
       <DefaultHeader
         title='Collections'
         tabs={[
-          { key: 'all', label: 'All (#)' },
-          { key: 'master', label: 'Master (#)' },
-          { key: 'my', label: 'My Collection (#)' },
+          { key: 'all', label: `All (${pagination.all_count || 0})` },
+          { key: 'master', label: `Master (${pagination.master_count || 0})` },
+          { key: 'my', label: `My Collection (${pagination.my_count || 0})` },
         ]}
         activeTab={tabActiveKey}
         onTabChange={handleTabChange}

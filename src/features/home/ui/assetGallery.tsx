@@ -1,12 +1,14 @@
 'use client'
 
 import React, { useRef } from 'react'
-import { Button, Carousel } from 'antd'
+import { Button } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
-import type { CarouselRef } from 'antd/es/carousel'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick-theme.css'
+import 'slick-carousel/slick/slick.css'
 import { HomeAssetCard } from '@/features/assets/ui/card/homeAssetCard'
 import { CollectionsHomeCard } from '@/features/collections/ui/card/homeCard'
-import { useHomeStore } from '../model/homeStore'
+import { useHomeStore } from '@/features/home/model/homeStore'
 import styles from './home.module.scss'
 
 export const AssetGallery: React.FC<{ refetch: () => void }> = ({ refetch }) => {
@@ -14,16 +16,24 @@ export const AssetGallery: React.FC<{ refetch: () => void }> = ({ refetch }) => 
     home: { recentDownloads, masterCollections },
   } = useHomeStore()
 
-  const assetRef = useRef<CarouselRef | null>(null)
-  const collectionsRef = useRef<CarouselRef | null>(null)
+  const assetRef = useRef<Slider>(null)
+  const collectionsRef = useRef<Slider>(null)
+
+  const settings = {
+    dots: false,
+    arrows: false,
+    speed: 300,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+  }
 
   const handleCarousel = (direction: 'prev' | 'next', type: 'recent' | 'master') => {
     const ref = type === 'recent' ? assetRef.current : collectionsRef.current
     if (ref) {
       if (direction === 'prev') {
-        ref.prev()
+        ref.slickPrev?.()
       } else {
-        ref.next()
+        ref.slickNext?.()
       }
     }
   }
@@ -35,11 +45,11 @@ export const AssetGallery: React.FC<{ refetch: () => void }> = ({ refetch }) => 
         <div className={styles.list}>
           {recentDownloads && recentDownloads.length > 0 ? (
             <>
-              <Carousel ref={assetRef} slidesToShow={5} slidesToScroll={1} dots={false} arrows={false}>
+              <Slider ref={assetRef} {...settings} infinite={recentDownloads.length > 5}>
                 {recentDownloads.map(asset => (
                   <HomeAssetCard key={asset.asset_id} item={asset} />
                 ))}
-              </Carousel>
+              </Slider>
               {recentDownloads.length > 5 && (
                 <div className={styles.btn}>
                   <Button shape='circle' icon={<LeftOutlined />} onClick={() => handleCarousel('prev', 'recent')} />
@@ -57,11 +67,11 @@ export const AssetGallery: React.FC<{ refetch: () => void }> = ({ refetch }) => 
         <div className={styles.list}>
           {masterCollections && masterCollections.length > 0 ? (
             <>
-              <Carousel ref={collectionsRef} slidesToShow={5} slidesToScroll={1} dots={false} arrows={false}>
+              <Slider ref={collectionsRef} {...settings} infinite={masterCollections.length > 5}>
                 {masterCollections.map(collection => (
                   <CollectionsHomeCard key={collection.collection_id} item={collection} refetch={refetch} />
                 ))}
-              </Carousel>
+              </Slider>
               {masterCollections.length > 5 && (
                 <div className={styles.btn}>
                   <Button shape='circle' icon={<LeftOutlined />} onClick={() => handleCarousel('prev', 'master')} />

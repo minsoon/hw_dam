@@ -11,6 +11,10 @@ export const handleApiError = (errorMessage: string, type: string) => {
       title = 'Server Error'
       content = 'An unexpected error occurred. Please try again later or contact support if the problem persists.'
       break
+    case '403':
+      title = 'Access Denied'
+      content = 'You are not authorized to access this resource.'
+      break
     default:
       title = 'Unknown Error'
       content = 'An unexpected error occurred. Please try again later.'
@@ -21,7 +25,6 @@ export const handleApiError = (errorMessage: string, type: string) => {
     title,
     content,
     onOk() {
-      // TODO: 로그인 페이지로 이동 추가 필요
       history.back()
     },
   })

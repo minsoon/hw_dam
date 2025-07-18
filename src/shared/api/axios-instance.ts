@@ -1,7 +1,10 @@
-// import { cookies } from 'next/headers'
-import { GetServerSidePropsContext } from 'next'
+import type { Session } from 'next-auth'
+import { getSession, signOut } from 'next-auth/react'
 import axios from 'axios'
-import * as cookie from 'cookie'
+
+let sessionPromise: Promise<Session | null> | null = null
+let sessionCache: { accessToken?: string } | null = null
+let cacheExpiry = 0
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
 
@@ -11,19 +14,22 @@ export const setGlobalErrorHandler = (callback: (errorMessage: string, type: '40
   globalErrorHandlerCallback = callback
 }
 
-function getToken(ctx?: GetServerSidePropsContext) {
-  if (typeof window === 'undefined') {
-    const rawCookie = ctx?.req?.headers?.cookie || ''
-    const parsed = cookie.parse(rawCookie)
-    return parsed.accessToken || null
-  } else {
-    return (
-      document.cookie
-        .split('; ')
-        .find(row => row.startsWith('accessToken='))
-        ?.split('=')[1] || null
-    )
+export async function getToken() {
+  if (sessionCache && Date.now() < cacheExpiry) {
+    return sessionCache.accessToken || null
   }
+
+  if (!sessionPromise) {
+    sessionPromise = getSession().then(session => {
+      sessionCache = session
+      cacheExpiry = Date.now() + 30 * 1000
+      sessionPromise = null
+      return session
+    })
+  }
+
+  const session = await sessionPromise
+  return session?.accessToken || null
 }
 
 export const apiInstance = axios.create({
@@ -35,8 +41,8 @@ export const apiInstance = axios.create({
 })
 
 apiInstance.interceptors.request.use(
-  config => {
-    const token = getToken()
+  async config => {
+    const token = await getToken()
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
@@ -57,6 +63,11 @@ apiInstance.interceptors.response.use(
 
     if (response) {
       globalErrorHandlerCallback?.(response.data.message, response.status.toString())
+      if (response.status === 401) {
+        if (typeof window !== 'undefined') {
+          signOut({ callbackUrl: '/login' })
+        }
+      }
     }
     return Promise.reject(error)
   }

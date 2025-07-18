@@ -1,9 +1,9 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { Button } from 'antd'
+import { Button, Skeleton } from 'antd'
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import { useAssetUpdateStore } from '@/features/assets/model/assetUpdateStore'
 import { useUploaderDropzoneModify } from '@/features/uploader/model/useUploaderDropzone'
@@ -16,10 +16,14 @@ export const AssetGallery: React.FC<{
 }> = ({ isImageType, isEmergencyOverride }) => {
   const { asset, removeFile } = useAssetUpdateStore()
   const { getRootProps, getInputProps } = useUploaderDropzoneModify()
+  const [imgLoaded, setImgLoaded] = useState(false)
 
   const searchParams = useSearchParams()
   const isNewVersion = searchParams.get('newVersion')
 
+  useEffect(() => {
+    setImgLoaded(false)
+  }, [asset?.thumbnail])
   if (!asset) return null
 
   return (
@@ -27,7 +31,18 @@ export const AssetGallery: React.FC<{
       {isImageType ? (
         <div className={styles.thumbnail}>
           {asset?.thumbnail && asset.thumbnail.startsWith('http') ? (
-            <Image src={asset.thumbnail} alt='thumbnail' width={730} height={487} />
+            <div className={styles.thumbnailImg}>
+              {!imgLoaded && <Skeleton.Image style={{ width: 200, height: 150 }} active />}
+              <Image
+                src={asset.thumbnail}
+                alt='thumbnail'
+                fill
+                sizes='730px'
+                priority
+                onLoad={() => setImgLoaded(true)}
+                style={{ opacity: imgLoaded ? 1 : 0, transition: 'opacity 0.3s' }}
+              />
+            </div>
           ) : (
             <div
               style={{

@@ -6,17 +6,22 @@ import { AssetCardContent } from '@/features/assets/ui/card/assetCardContent'
 import { CardMenu } from '@/features/assets/ui/card/cardMenu'
 import styles from './card.module.scss'
 
-export const AssetsCard: React.FC<{ item: AssetListDataResponse; refetch: () => void }> = ({ item, refetch }) => {
-  const { checkedIds, setChecked } = useAssetStore()
-  const isChecked = checkedIds.includes(item.asset_id)
+export const AssetsCard = React.memo(({ item, refetch }: { item: AssetListDataResponse; refetch: () => void }) => {
+  const setChecked = useAssetStore(state => state.setChecked)
+  const isChecked = useAssetStore(state => state.checkedIds.has(item.asset_id))
+
+  const handleCheck = () => {
+    setChecked(item.asset_id)
+  }
 
   return (
     <div className={`${styles.card} ${isChecked ? styles.checked : ''}`}>
       <AssetCardContent item={item} />
-      <div className={`${styles.checkbox} ${checkedIds.length > 0 ? styles.checked : ''}`}>
-        <Checkbox checked={checkedIds?.includes(item.asset_id)} onChange={() => setChecked(item.asset_id)} />
+      <div className={`${styles.checkbox} ${isChecked ? styles.checked : ''}`}>
+        <Checkbox checked={isChecked} onChange={handleCheck} />
       </div>
-      <CardMenu item={item} refetch={refetch} downloadType={'asset'} />
+      <CardMenu item={item} refetch={refetch} downloadType='asset' />
     </div>
   )
-}
+})
+AssetsCard.displayName = 'AssetsCard'

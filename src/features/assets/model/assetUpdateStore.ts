@@ -94,28 +94,16 @@ export const useAssetUpdateStore = create<AssetUpdateState>()(set => ({
     }),
   setAsset: (partialAsset: AssetUpdateInfoResponse) =>
     set(state => {
+      const generateUniqueId = () => {
+        const timestamp = Date.now()
+        const random = Math.floor(Math.random() * 1000000)
+        return timestamp + random
+      }
+
       const asset = {
         ...(state.asset || {}),
         ...partialAsset,
       } as AssetUpdateInfoResponse
-
-      // const getMimeType = (ext: string): string => {
-      //   const map: Record<string, string> = {
-      //     jpg: 'image/jpeg',
-      //     jpeg: 'image/jpeg',
-      //     png: 'image/png',
-      //     gif: 'image/gif',
-      //     pdf: 'application/pdf',
-      //     svg: 'image/svg+xml',
-      //     mp4: 'video/mp4',
-      //     webp: 'image/webp',
-      //     txt: 'text/plain',
-      //     zip: 'application/zip',
-      //     docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      //   }
-
-      //   return map[ext.toLowerCase()] || 'application/octet-stream'
-      // }
 
       const tags = (asset.tags ?? []).map(tag => ({
         id: tag.tag_id,
@@ -131,6 +119,31 @@ export const useAssetUpdateStore = create<AssetUpdateState>()(set => ({
         viewType: 'edit' as ViewType,
       }))
 
+      const productModel = {
+        id: state.panelItems.find(p => p.type === 'productModel')?.id ?? generateUniqueId(),
+        title: 'Product Model (PIM)',
+        type: 'productModel' as AssetEditPanelKey,
+        data:
+          asset.product_models?.map(child => ({
+            id: child.product_model_id ?? 0,
+            value: child.product_model ?? '',
+          })) ?? [],
+        viewType: 'edit' as ViewType,
+      }
+
+      const productSegment = {
+        id: state.panelItems.find(p => p.type === 'productSegment')?.id ?? generateUniqueId(),
+        title: 'Product Segment',
+        type: 'productSegment' as AssetEditPanelKey,
+        data:
+          asset.product_segments?.map(child => ({
+            id: child.product_segment_id ?? 0,
+            value: child.spec_name ?? '',
+            is_selected: child.is_selected ?? 0,
+          })) ?? [],
+        viewType: 'edit' as ViewType,
+      }
+
       const properties = (asset.properties ?? []).map(property => ({
         id: property.property_category_id,
         title: property.category_name,
@@ -143,11 +156,6 @@ export const useAssetUpdateStore = create<AssetUpdateState>()(set => ({
         viewType: 'edit' as ViewType,
       }))
 
-      const generateUniqueId = () => {
-        const timestamp = Date.now()
-        const random = Math.floor(Math.random() * 1000000)
-        return timestamp + random
-      }
       const contacts = {
         id: state.panelItems.find(p => p.type === 'contacts')?.id ?? generateUniqueId(),
         title: 'Asset contacts',
@@ -167,7 +175,7 @@ export const useAssetUpdateStore = create<AssetUpdateState>()(set => ({
       return {
         asset,
         thumbnailKey: asset.files?.find(item => item.is_thumbnail === 1)?.asset_file_id || null,
-        panelItems: [...tags, ...properties, contacts, copyright],
+        panelItems: [...tags, productModel, productSegment, ...properties, contacts, copyright],
       }
     }),
   removeFile: (key?: number) =>
@@ -203,5 +211,5 @@ export const useAssetUpdateStore = create<AssetUpdateState>()(set => ({
         }
       }
     }),
-  removeAssetUpdateStore: () => set({ asset: null, files: [], panelItems: [], thumbnailKey: null }),
+  removeAssetUpdateStore: () => set({ asset: null, files: [], panelItems: [], thumbnailKey: null, assetUpdatePayload }),
 }))

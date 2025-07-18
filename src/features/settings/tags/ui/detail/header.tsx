@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button, Space } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { SearchBar } from '@/features/searchBar'
@@ -10,6 +10,7 @@ import { useTagsStore } from '../../model/useTagsStore'
 import ModalAddNew from '../modal/addNew'
 
 const SettingTagDetailHeader = ({ id }: { id: string }) => {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const categoryName = searchParams.get('categoryName')
   const { setKeyword } = useTagsStore()
@@ -28,6 +29,7 @@ const SettingTagDetailHeader = ({ id }: { id: string }) => {
       <PathHeader
         title={categoryName || ''}
         path='Settings / Tag management'
+        pathClick={() => router.back()}
         rightSlot={
           <>
             <Space>

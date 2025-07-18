@@ -39,10 +39,7 @@ export const ModalCreateNewVersion = ({ isOpen, onClose }: { isOpen: boolean; on
     >
       <Form onFinish={handleSubmit} validateTrigger={['onSubmit']}>
         <div className={styles.modalConfirm}>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet est pharetra, fringilla tortor at,
-            sollicitudin sem. 
-          </p>
+          <p>Are you sure you want to create a new version of this asset? </p>
           <div className={styles.modalConfirmButton}>
             <Button key='clear' className={styles.clearAllBtn} onClick={handleClose} disabled={isSubmitting}>
               Cancel

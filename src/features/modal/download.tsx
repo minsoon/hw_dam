@@ -11,26 +11,32 @@ export const ModalDownload = ({
   isOpen,
   onClose,
   downloadType,
+  isWorkingFile,
 }: {
   assetIds?: number | number[] | null
   collectionId?: number | null
   isOpen: boolean
+  isWorkingFile: number
   onClose: () => void
   downloadType?: 'asset' | 'collection'
 }) => {
   const { mutate: downloadAssets } = useAssetsDownloadMutation()
   const { mutate: downloadCollection } = useCollectionDownloadMutation()
   const [isChecked, setIsChecked] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleCheckboxChange = useCallback(() => {
     setIsChecked(prev => !prev)
   }, [])
 
   const handleClose = useCallback(() => {
+    if (isLoading) return
     onClose()
-  }, [onClose])
+  }, [onClose, isLoading])
 
   const handleSubmit = useCallback(() => {
+    setIsLoading(true)
+
     if (downloadType === 'collection' && collectionId) {
       downloadCollection(
         {
@@ -39,10 +45,12 @@ export const ModalDownload = ({
         },
         {
           onSuccess: data => {
+            setIsLoading(false)
             handleClose()
             downloadBlobAsFile(data.data, data.fileName)
           },
           onError: () => {
+            setIsLoading(false)
             message.error('Failed to download collection')
           },
         }
@@ -55,10 +63,12 @@ export const ModalDownload = ({
         },
         {
           onSuccess: data => {
+            setIsLoading(false)
             handleClose()
             downloadBlobAsFile(data.data, data.fileName)
           },
           onError: () => {
+            setIsLoading(false)
             message.error('Failed to download asset')
           },
         }
@@ -71,12 +81,13 @@ export const ModalDownload = ({
       open={isOpen}
       onCancel={handleClose}
       width={600}
+      maskClosable={!isLoading}
       title='Download selected'
       footer={[
-        <Button key='clear' className={styles.clearAllBtn} onClick={handleClose}>
+        <Button key='clear' className={styles.clearAllBtn} onClick={handleClose} disabled={isLoading}>
           Cancel
         </Button>,
-        <Button key='submit' type='primary' onClick={handleSubmit}>
+        <Button key='submit' type='primary' onClick={handleSubmit} loading={isLoading}>
           Download
         </Button>,
       ]}
@@ -84,11 +95,13 @@ export const ModalDownload = ({
       <div className={styles.modalConfirm}>
         <dl>
           <dt>Please select a preferred condition of downloads below.</dt>
-          <dd>
-            <Checkbox checked={isChecked} onChange={handleCheckboxChange}>
-              Download with working files
-            </Checkbox>
-          </dd>
+          {isWorkingFile === 1 && (
+            <dd>
+              <Checkbox checked={isChecked} onChange={handleCheckboxChange}>
+                Download with working files
+              </Checkbox>
+            </dd>
+          )}
         </dl>
       </div>
     </Modal>

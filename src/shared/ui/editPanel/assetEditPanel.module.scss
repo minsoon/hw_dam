@@ -20,6 +20,9 @@
       padding-bottom: 8px;
       font-size: $font-label;
       color: $text-secondary;
+      span {
+        color: $primary;
+      }
     }
     dd {
       padding-bottom: 16px;
@@ -197,6 +200,29 @@
   }
 }
 
+.segmentEditPanel {
+  padding: 10px 15px;
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid $border-light;
+  border-radius: 4px;
+  background-color: $bg-surface-200;
+
+  :global(.ant-checkbox-group) {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  :global(.ant-checkbox-wrapper) {
+    :global(.ant-checkbox) {
+      :global(.ant-checkbox-inner) {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
 .contactsEditPanel {
   dl {
     dt {

@@ -13,6 +13,8 @@ export interface AssetTypeVariationResponse {
   updated_at: string;
   /** The sort order of the variation */
   sort_ord: number;
+  /** is working file */
+  is_working_file: number;
 }
 
 export interface AssetTypeResponse {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, message } from 'antd'
 import { DeleteOutlined, DownloadOutlined, PlusOutlined, StarOutlined } from '@ant-design/icons'
 import { useAssetStore } from '@/features/assets/model/assetsStore'
@@ -14,6 +14,13 @@ export const AssetSelectionBar = ({ refetch }: { refetch: () => void }) => {
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE)
   const { selectAll, deselectAll } = useSelectionActions(assets, 'asset_id', setChecked)
   const { mutate: updateFavorite } = useUpdateAssetFavoriteQuery()
+  const checkedAssets = useMemo(() => {
+    return assets.filter(asset => checkedIds.has(asset.asset_id))
+  }, [assets, checkedIds])
+
+  const isWorkingFile = useMemo(() => {
+    return checkedAssets.some(asset => asset.is_working_file === 1) ? 1 : 0
+  }, [checkedAssets])
 
   const handleFavourite = useCallback(
     (assetIds: number[]) => {
@@ -40,14 +47,14 @@ export const AssetSelectionBar = ({ refetch }: { refetch: () => void }) => {
   }, [])
 
   useEffect(() => {
-    setIsActive(checkedIds.length > 0)
+    setIsActive(checkedIds.size > 0)
   }, [checkedIds, assets])
 
   return (
     <>
       <SelectionBar
-        isActive={isActive && checkedIds.length > 0}
-        count={checkedIds.length}
+        isActive={isActive && checkedIds.size > 0}
+        count={checkedIds.size}
         setIsActive={setIsActive}
         secondaryActions={
           <>
@@ -61,7 +68,12 @@ export const AssetSelectionBar = ({ refetch }: { refetch: () => void }) => {
         }
         mainActions={
           <>
-            <Button variant='text' ghost icon={<StarOutlined />} onClick={() => handleFavourite(checkedIds)}>
+            <Button
+              variant='text'
+              ghost
+              icon={<StarOutlined />}
+              onClick={() => handleFavourite(Array.from(checkedIds))}
+            >
               Favourite
             </Button>
             <Button
@@ -96,7 +108,9 @@ export const AssetSelectionBar = ({ refetch }: { refetch: () => void }) => {
         type={activeModal}
         isOpen={activeModal !== ModalType.NONE}
         onClose={() => setActiveModal(ModalType.NONE)}
-        assetIds={checkedIds}
+        assetIds={Array.from(checkedIds)}
+        downloadType='asset'
+        isWorkingFile={isWorkingFile}
         refetch={refetch}
       />
     </>

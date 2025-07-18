@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button, Space } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { SearchBar } from '@/features/searchBar'
@@ -13,6 +13,7 @@ const SettingPropertyDetailHeader = ({ id }: { id: string }) => {
   const { detailTitle, setDetailTitle, setKeyword } = usePropertyStore()
   const [isAddNewModalOpen, setIsAddNewModalOpen] = useState(false)
   const searchParams = useSearchParams()
+  const router = useRouter()
 
   useEffect(() => {
     const name = searchParams.get('name')
@@ -34,6 +35,7 @@ const SettingPropertyDetailHeader = ({ id }: { id: string }) => {
       <PathHeader
         title={detailTitle}
         path='Settings / Property management'
+        pathClick={() => router.back()}
         rightSlot={
           <>
             <Space>

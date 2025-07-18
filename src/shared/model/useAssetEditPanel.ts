@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CheckboxChangeEvent } from 'antd'
+import { usePimProductSearchMutation } from '@/entities/model/usePimQuery'
 import { useAssetUpdateStore } from '@/features/assets/model/assetUpdateStore'
 import { PanelItemsProps } from '@/shared/types/editPanel'
 
@@ -18,6 +19,20 @@ export const useAssetEditPanel = () => {
     setIsConfidential(version.is_confidential === 1)
   }, [version])
 
+  const handleNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!version) return
+      setName(e.target.value)
+      setAsset({
+        ...asset,
+        current_version: {
+          ...version,
+          asset_name: e.target.value,
+        },
+      })
+    },
+    [asset, version, setAsset]
+  )
   const handleBlur = useCallback(() => {
     if (!version) return
     setAsset({
@@ -47,7 +62,7 @@ export const useAssetEditPanel = () => {
 
   return {
     name,
-    setName,
+    handleNameChange,
     description,
     setDescription,
     isConfidential,
@@ -206,20 +221,135 @@ export const useAssetCheckboxPanel = (panel: PanelItemsProps) => {
 
   return { panelData: asset, selectedIds, handleChange }
 }
+
+export const useAssetProductSegmentPanel = () => {
+  const { asset, setAsset } = useAssetUpdateStore()
+
+  const selectedIds = useMemo(() => {
+    if (!asset || !asset.product_segments) return []
+    return (
+      asset.product_segments
+        .filter(option => option.is_selected === 1)
+        .map(option => option.product_segment_id.toString()) ?? []
+    )
+  }, [asset])
+
+  const handleChange = (checkedValues: string[]) => {
+    if (!asset) return
+
+    const updatedSegments = asset.product_segments?.map(segment => {
+      return {
+        ...segment,
+        is_selected: checkedValues.includes(segment.product_segment_id?.toString() ?? '') ? 1 : 0,
+      }
+    })
+
+    setAsset({ ...asset, product_segments: updatedSegments })
+  }
+
+  return { panelData: asset, selectedIds, handleChange }
+}
+
+export const useAssetProductModelPanel = () => {
+  const { asset, setAsset } = useAssetUpdateStore()
+  const [apiOptions, setApiOptions] = useState<{ product_model_id: number; product_model: string }[]>([])
+  const pimSearch = usePimProductSearchMutation()
+
+  const selectedModels = useMemo(() => asset?.product_models ?? [], [asset])
+  const selectedIds = useMemo(() => selectedModels.map(m => m.product_model_id), [selectedModels])
+
+  const mergedOptions = useMemo(() => {
+    const map = new Map<number, string>()
+    selectedModels.forEach(m => map.set(m.product_model_id, m.product_model))
+    apiOptions.forEach(o => map.set(o.product_model_id, o.product_model))
+    return Array.from(map.entries()).map(([product_model_id, product_model]) => ({
+      product_model_id,
+      product_model,
+    }))
+  }, [selectedModels, apiOptions])
+
+  const handleSearch = useCallback(
+    async (keyword: string) => {
+      if (!keyword.trim()) return
+      try {
+        const res = await pimSearch.mutateAsync(keyword)
+        setApiOptions(
+          res.data.map(item => ({
+            product_model_id: item.Id,
+            product_model: item.ProductName,
+          }))
+        )
+      } catch (err) {
+        console.error('PIM search error:', err)
+      }
+    },
+    [pimSearch]
+  )
+
+  const handleChange = useCallback(
+    (
+      _ids: number[],
+      option?:
+        | { product_model_id: number; product_model: string }
+        | { product_model_id: number; product_model: string }[]
+    ) => {
+      if (!asset) return
+      const models = Array.isArray(option) ? option : option ? [option] : []
+
+      setAsset({ ...asset, product_models: models })
+    },
+    [setAsset, asset]
+  )
+  return {
+    options: mergedOptions,
+    selectedIds,
+    handleSearch,
+    handleChange,
+  }
+}
+
 export const useAssetContactsPanel = () => {
   const { asset, setAsset } = useAssetUpdateStore()
 
+  const [formValues, setFormValues] = useState({
+    owner_name: '',
+    owner_email: '',
+    agency_name: '',
+    agency_contact_name: '',
+    is_owner: 1,
+  })
+
+  useEffect(() => {
+    if (!asset || !asset.current_version) return
+    const currentVersion = asset.current_version
+    setFormValues({
+      owner_name: currentVersion.owner_name ?? '',
+      owner_email: currentVersion.owner_email ?? '',
+      agency_name: currentVersion.agency_name ?? '',
+      agency_contact_name: currentVersion.agency_contact_name ?? '',
+      is_owner: currentVersion.is_owner ?? 1,
+    })
+  }, [asset])
+
   const handleChange = (field: string, value: string | number) => {
+    setFormValues(prev => ({
+      ...prev,
+      [field]: value,
+    }))
+  }
+
+  const handleBlur = () => {
     if (!asset) return
+
     setAsset({
       ...asset,
       current_version: {
-        ...asset?.current_version,
-        [field]: value,
+        ...asset.current_version,
+        ...formValues,
       },
     })
   }
-  return { asset: asset?.current_version, handleChange }
+  return { asset: asset?.current_version, formValues, handleChange, handleBlur }
 }
 
 export const useAssetCopyrightPanel = () => {

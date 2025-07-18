@@ -21,6 +21,10 @@ export const renderEditPanelContent = (
       return (renderPanel as (props: PanelItemsProps) => JSX.Element)(panel)
     case 'select':
       return (renderPanel as (props: PanelItemsProps) => JSX.Element)(panel)
+    case 'productModel':
+      return (renderPanel as (props: PanelItemsProps) => JSX.Element)(panel)
+    case 'productSegment':
+      return (renderPanel as (props: PanelItemsProps) => JSX.Element)(panel)
     case 'radio':
       return (renderPanel as (props: PanelItemsProps) => JSX.Element)(panel)
     case 'checkbox':

@@ -44,12 +44,16 @@
           padding-bottom: 8px;
           color: $text-secondary;
           text-decoration: underline;
+          &.pathClick {
+            cursor: pointer;
+          }
         }
         dd {
           display: flex;
           align-items: center;
           gap: 8px;
           font-size: $font-h2;
+          line-height: $line-height-lg;
           p {
             display: inline-block;
             font-size: $font-label;

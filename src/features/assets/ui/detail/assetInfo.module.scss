@@ -81,12 +81,17 @@
             &.on {
               border-color: $primary;
             }
-            p {
+            .image {
+              position: relative;
               width: 48px;
               height: 48px;
-              background-size: cover;
-              background-position: center;
+              img {
+                width: 48px;
+                height: 48px;
+                object-fit: contain;
+              }
             }
+
             .fileIcon {
               width: 48px;
               height: 48px;

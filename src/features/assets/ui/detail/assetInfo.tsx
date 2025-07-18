@@ -22,6 +22,7 @@ export const AssetInfo: React.FC<{
   const isVisibleToUser = (!isShare || hasToken) && !isPublic
   const items = useAssetInfoItems({ isVisibleToUser })
   const router = useRouter()
+  // const isDownloadable = asset && (!('access_type' in asset) || asset?.access_type === 'D')
 
   if (!asset || !currentVersion) return <></>
 
@@ -54,23 +55,25 @@ export const AssetInfo: React.FC<{
               <dt>File type(s)</dt>
               <dd>{asset.file_type_summary}</dd>
             </dl>
-            {currentVersion?.properties?.map(property => (
-              <dl key={property.category_id}>
-                <dt>{property.category_name}</dt>
-                <dd>{property.options.map(option => option.option_name).join(', ')}</dd>
-              </dl>
-            ))}
+            {currentVersion?.properties
+              ?.filter(property => property.category_name !== 'Product Series')
+              .map(property => (
+                <dl key={property.category_id}>
+                  <dt>{property.category_name}</dt>
+                  <dd>{property.options.map(option => option.option_name).join(', ')}</dd>
+                </dl>
+              ))}
             <dl>
               <dt>Copyright (License*)</dt>
-              <dd>{currentVersion?.copyright}</dd>
+              <dd>{currentVersion?.copyright || '-'}</dd>
             </dl>
             <dl>
               <dt>Date created</dt>
-              <dd>{formatDateTime(currentVersion?.created_at)}</dd>
+              <dd>{formatDateTime(asset.created_at)}</dd>
             </dl>
             <dl>
               <dt>Date updated</dt>
-              <dd>{formatDateTime(currentVersion?.updated_at)}</dd>
+              <dd>{formatDateTime(asset.updated_at)}</dd>
             </dl>
           </div>
         </div>
@@ -91,6 +94,7 @@ export const AssetInfo: React.FC<{
           />
         </div>
       </div>
+      {/* {isDownloadable && ( */}
       <div className={styles.downloadButton}>
         <Button
           color='primary'
@@ -102,6 +106,7 @@ export const AssetInfo: React.FC<{
           Download all ({asset.file_count})
         </Button>
       </div>
+      {/* )} */}
 
       <Modal
         type={activeModal}
@@ -109,6 +114,7 @@ export const AssetInfo: React.FC<{
         onClose={() => setActiveModal(ModalType.NONE)}
         assetIds={asset?.asset_id}
         downloadType={'asset'}
+        isWorkingFile={asset.is_working_file}
       />
     </div>
   )

@@ -8,7 +8,10 @@ import { useSelectionActions } from '@/shared/model/useSelectionActions'
 import { SelectionBar } from '@/shared/ui/selectionBar'
 
 export const CollectionSelectionBar = ({ refetch }: { refetch: () => void }) => {
-  const { collections, checkedIds, setChecked } = useCollectionStore()
+  const collections = useCollectionStore(state => state.collections)
+  const checkedIds = useCollectionStore(state => state.checkedIds)
+  const setChecked = useCollectionStore(state => state.setChecked)
+
   const [isActive, setIsActive] = useState(true)
   const { selectAll, deselectAll } = useSelectionActions(collections, 'collection_id', setChecked)
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE)
@@ -19,14 +22,14 @@ export const CollectionSelectionBar = ({ refetch }: { refetch: () => void }) => 
   }, [setChecked, setActiveModal])
 
   useEffect(() => {
-    setIsActive(checkedIds.length > 0)
+    setIsActive(checkedIds.size > 0)
   }, [checkedIds, collections])
 
   return (
     <>
       <SelectionBar
-        isActive={isActive && checkedIds.length > 0}
-        count={checkedIds.length}
+        isActive={isActive && checkedIds.size > 0}
+        count={checkedIds.size}
         setIsActive={setIsActive}
         secondaryActions={
           <>
@@ -56,7 +59,7 @@ export const CollectionSelectionBar = ({ refetch }: { refetch: () => void }) => 
         type={activeModal}
         isOpen={activeModal !== ModalType.NONE}
         onClose={onClose}
-        collectionIds={checkedIds}
+        collectionIds={Array.from(checkedIds)}
         refetch={refetch!}
       />
     </>

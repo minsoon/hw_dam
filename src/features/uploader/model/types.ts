@@ -12,12 +12,21 @@ export type AssetPostInfo = {
   agency_contact_name: string
   copyright: string
 }
+
+export type AssetRefs = AssetRefsResponse & ProductModels
+
+export type ProductModels = {
+  product_models: {
+    product_model_id: number
+    product_model: string
+  }[]
+}
+
 export interface UploaderState {
   assets: AssetPostRequest['assetPostInfos']
   files: UploadedFile[]
   assetTypes: AssetTypeResponse[]
   assetTypesLoading: boolean
-  currentAsset: AssetPostRequest['assetPostInfos'][0] | null
   currentIndex: number | null
   basePanelData: AssetRefsResponse | null
   panelItems: PanelItemsProps[]
@@ -30,7 +39,7 @@ export interface UploaderState {
   setVariation: (key: number, variationId: number) => void
   setAssetTypeDetail: (detail: AssetTypeDetailResponse | null) => void
   setAssetTypes: (types: AssetTypeResponse[]) => void
-  setPanel: (panelData: Partial<AssetRefsResponse>) => void
+  setPanel: (panelData: Partial<AssetRefs>) => void
   setBasePanelData: (panelData: AssetRefsResponse) => void
   setCurrentIndex: (index: number | null) => void
   setApplyAll: (panel: PanelItemsProps) => void

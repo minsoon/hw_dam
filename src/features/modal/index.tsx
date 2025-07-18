@@ -17,6 +17,7 @@ import { ModalOverrideCurrentVersion } from './overrideCurrentVersion'
 import { ModalRemoveAsset } from './removeAsset'
 import { ModalShare } from './share'
 import { ModalUploadSuccess } from './uploadSuccess'
+import { ModalUploaderLoading } from './uploaderLoding'
 
 export enum ModalType {
   NONE = 'none',
@@ -40,6 +41,7 @@ export enum ModalType {
   UPLOAD_SUCCESS = 'uploadSuccess',
   DELETE_ASSET_VERSION = 'deleteAssetVersion',
   ADDED_TAGS = 'addedTags',
+  UPLOADER_LOADING = 'uploaderLoading',
 }
 
 interface ModalProps {
@@ -58,9 +60,11 @@ interface ModalProps {
   downloadType?: 'asset' | 'collection'
   isEdit?: boolean
   isEmergencyOverride?: boolean
+  isWorkingFile?: number
   refetch?: () => void
   type: ModalType
   isOpen: boolean
+  isBack?: boolean
   onClose: () => void
 }
 
@@ -99,6 +103,7 @@ export const Modal = (props: ModalProps) => {
           assetIds={props.assetIds!}
           collectionId={props.collectionId!}
           downloadType={props.downloadType!}
+          isWorkingFile={props.isWorkingFile || 0}
         />
       )
     case ModalType.DELETE_SELECTED:
@@ -131,6 +136,7 @@ export const Modal = (props: ModalProps) => {
           collectionIds={props.collectionIds!}
           refetch={props.refetch!}
           onClose={onClose}
+          isBack={props.isBack}
         />
       )
     case ModalType.DELETE_ASSET:
@@ -162,6 +168,8 @@ export const Modal = (props: ModalProps) => {
       return <ModalDeleteAssetVersion isOpen={isOpen} onClose={onClose} />
     case ModalType.ADDED_TAGS:
       return <ModalAddedTags isOpen={isOpen} onClose={onClose} />
+    case ModalType.UPLOADER_LOADING:
+      return <ModalUploaderLoading isOpen={isOpen} />
     default:
       return null
   }

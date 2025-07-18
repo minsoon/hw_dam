@@ -4,6 +4,8 @@ import {
   CheckboxGroupEditPanel,
   ContactsEditPanel,
   CopyrightEditPanel,
+  ProductModelEditPanel,
+  ProductSegmentEditPanel,
   RadioEditPanel,
   SelectEditPanel,
   TagEditPanel,
@@ -13,6 +15,8 @@ export const panelRendererMap: PanelRendererWithAsset = {
   tag: (props: PanelItemsProps) => {
     return <TagEditPanel {...props} />
   },
+  productModel: (props: PanelItemsProps) => <ProductModelEditPanel {...props} />,
+  productSegment: (props: PanelItemsProps) => <ProductSegmentEditPanel {...props} />,
   select: (props: PanelItemsProps) => <SelectEditPanel {...props} />,
   radio: (props: PanelItemsProps) => <RadioEditPanel {...props} />,
   checkbox: (props: PanelItemsProps) => <CheckboxEditPanel {...props} />,

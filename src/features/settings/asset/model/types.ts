@@ -20,4 +20,5 @@ export interface VariationItem {
   name: string
   file_type: string[]
   variation_id?: number
+  is_working_file?: number
 }

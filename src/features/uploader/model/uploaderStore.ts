@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { AssetPostRequest, AssetRefsResponse } from '@/entities/types/Assets'
 import { updateFilesAndAssets } from '@/features/uploader/lib/updateFilesAndAssets'
 import { AssetEditPanelKey, PanelItemsProps, ViewType } from '@/shared/types/editPanel'
-import { UploaderState } from './types'
+import { AssetRefs, UploaderState } from './types'
 
 export const useUploaderStore = create<UploaderState>()(set => ({
   assets: [],
@@ -11,7 +11,6 @@ export const useUploaderStore = create<UploaderState>()(set => ({
   assetTypesLoading: true,
   assetTypeDetail: null,
   assetTypeDetailLoading: true,
-  currentAsset: null,
   panelData: null,
   basePanelData: null,
   panelItems: [],
@@ -51,7 +50,7 @@ export const useUploaderStore = create<UploaderState>()(set => ({
         assets: updatedAssets,
       }
     }),
-  setPanel: (partialPanelItems: Partial<AssetRefsResponse>) =>
+  setPanel: (partialPanelItems: Partial<AssetRefs>) =>
     set(state => {
       const index = state.currentIndex ?? 0
       const newPanelData = [...(state.panelData || [])]
@@ -78,6 +77,19 @@ export const useUploaderStore = create<UploaderState>()(set => ({
         viewType: 'upload' as ViewType,
       }))
 
+      const productSegment = {
+        id: new Date().getTime() * Math.random(),
+        title: 'Product Segment',
+        type: 'productSegment' as AssetEditPanelKey,
+        data:
+          panelData.product_segments?.map(child => ({
+            id: child.product_segment_id ?? 0,
+            value: child.spec_name ?? '',
+            is_selected: child.is_selected ?? 0,
+          })) ?? [],
+        viewType: 'upload' as ViewType,
+      }
+
       const properties = (panelData.properties ?? []).map(property => ({
         id: property.property_category_id,
         title: property.category_name,
@@ -90,7 +102,7 @@ export const useUploaderStore = create<UploaderState>()(set => ({
         viewType: 'upload' as ViewType,
       }))
 
-      const tags_list = tags.flatMap(tag =>
+      const tagsList = tags.flatMap(tag =>
         tag.data
           .filter(child => child.is_selected === 1)
           .map(child => {
@@ -101,7 +113,15 @@ export const useUploaderStore = create<UploaderState>()(set => ({
             return child.is_new === 1 ? base : { ...base, tag_id: child.id }
           })
       )
-      const properties_list = properties.flatMap(property =>
+
+      const productSegmentList = productSegment.data.filter(option => option.is_selected === 1).map(option => option.id)
+
+      const productModelList = (panelData as Partial<AssetRefs>).product_models?.map(item => ({
+        product_model_id: item.product_model_id,
+        product_model: item.product_model,
+      }))
+
+      const propertiesList = properties.flatMap(property =>
         property.data
           .filter(option => option.is_selected === 1)
           .map(option => ({
@@ -112,13 +132,19 @@ export const useUploaderStore = create<UploaderState>()(set => ({
 
       const assetWithTagsList = {
         ...asset,
-        tags_list,
-        properties_list,
+        product_segments: productSegmentList,
+        tags_list: tagsList,
+        product_models: productModelList,
+        properties_list: propertiesList,
       }
 
       const updatedAssets = isAuto
         ? state.assets.map((a, i) => (i === index ? assetWithTagsList : a))
-        : state.assets.map(() => ({ ...assetWithTagsList }))
+        : state.assets.map(asset => ({
+            ...assetWithTagsList,
+            file_info: asset.file_info,
+          }))
+
       const syncedPanelData = isAuto ? newPanelData : state.assets.map(() => structuredClone(newPanelData[0]))
 
       return {
@@ -128,17 +154,42 @@ export const useUploaderStore = create<UploaderState>()(set => ({
     }),
   setBasePanelData: (panelData: AssetRefsResponse) =>
     set(() => {
-      const tags = (panelData.tags ?? []).map(tag => ({
-        id: tag.tag_id,
-        title: tag.tag_name,
-        type: 'tag' as AssetEditPanelKey,
-        data: tag.child_tags.map(child => ({
-          id: child.tag_id ?? 0,
-          value: child.tag_name,
-          is_selected: child.is_selected ?? 0,
-        })),
+      const tags = (panelData.tags ?? [])
+        .filter(tag => tag.is_ai_tag !== 1)
+        .map(tag => ({
+          id: tag.tag_id,
+          title: tag.tag_name,
+          type: 'tag' as AssetEditPanelKey,
+          data: tag.child_tags.map(child => ({
+            id: child.tag_id ?? 0,
+            value: child.tag_name,
+            is_selected: child.is_selected ?? 0,
+          })),
+          viewType: 'upload' as ViewType,
+        }))
+
+      const productSegment = {
+        id: new Date().getTime() * Math.random(),
+        title: 'Product Segment',
+        type: 'productSegment' as AssetEditPanelKey,
+        data:
+          panelData.product_segments?.map(child => ({
+            id: child.product_segment_id ?? 0,
+            value: child.spec_name ?? '',
+            is_selected: child.is_selected ?? 0,
+          })) ?? [],
         viewType: 'upload' as ViewType,
-      }))
+      }
+
+      const productModel = [
+        {
+          id: new Date().getTime() * Math.random(),
+          title: 'Product Model (PIM)',
+          type: 'productModel' as AssetEditPanelKey,
+          data: [],
+          viewType: 'upload' as ViewType,
+        },
+      ]
 
       const properties = (panelData.properties ?? []).map(property => ({
         id: property.property_category_id,
@@ -171,8 +222,8 @@ export const useUploaderStore = create<UploaderState>()(set => ({
       }
 
       return {
-        basePanelData: panelData,
-        panelItems: [...tags, ...properties, contacts, copyright],
+        basePanelData: { ...panelData, product_models: [] },
+        panelItems: [...tags, ...productModel, productSegment, ...properties, contacts, copyright],
       }
     }),
   setApplyAll: (panel: PanelItemsProps) =>
@@ -180,8 +231,8 @@ export const useUploaderStore = create<UploaderState>()(set => ({
       const { currentIndex, panelData, assets } = state
       if (currentIndex == null) return {}
 
-      const basePanel = panelData?.[currentIndex]
-      const baseAsset = assets?.[currentIndex]
+      const basePanel = panelData?.[currentIndex] as AssetRefs
+      const baseAsset = assets?.[currentIndex] as AssetPostRequest['assetPostInfos'][0] & AssetRefs
       if (!basePanel || !baseAsset) return {}
 
       switch (panel.type) {
@@ -273,6 +324,47 @@ export const useUploaderStore = create<UploaderState>()(set => ({
             assets: updatedAssets,
           }
         }
+        case 'productSegment': {
+          const updatedPanelData = panelData?.map((p, index) => {
+            if (index === currentIndex) return p
+            return {
+              ...p,
+              product_segments: basePanel.product_segments,
+            }
+          })
+          const updatedAssets = assets.map((a, index) => {
+            if (index === currentIndex) return a
+            return {
+              ...a,
+              product_segments: baseAsset.product_segments,
+            }
+          })
+          return {
+            panelData: updatedPanelData,
+            assets: updatedAssets,
+          }
+        }
+        case 'productModel': {
+          const updatedPanelData = panelData?.map((p, index) => {
+            if (index === currentIndex) return p
+            return {
+              ...p,
+              product_models: basePanel.product_models,
+            }
+          })
+          const updatedAssets = assets.map((a, index) => {
+            if (index === currentIndex) return a
+            return {
+              ...a,
+              product_models: baseAsset.product_models,
+            }
+          })
+          return {
+            panelData: updatedPanelData,
+            assets: updatedAssets,
+          }
+        }
+
         case 'contacts': {
           const { is_owner, owner_name, owner_email, agency_name, agency_contact_name } = baseAsset
 
@@ -317,15 +409,29 @@ export const useUploaderStore = create<UploaderState>()(set => ({
     set(state => {
       const isAuto = state.assetTypeDetail?.default_type === 'Auto'
 
-      const assetPostInfos = files.map(file => {
-        const baseAsset = !isAuto && state.assets[0] ? state.assets[0] : null
+      const filesInfo = files.map(file => ({
+        key: new Date().getTime() * Math.random(),
+        file,
+        url: URL.createObjectURL(file),
+        isImage: file.type.startsWith('image/'),
+        is_thumbnail: 0,
+        variation_id: null,
+        asset_file_id: 0,
+      }))
 
+      const thumbnailKey = state.thumbnailKey || filesInfo.find(f => f.isImage)?.key
+      const thumbnailIdx = state.thumbnailKey
+        ? filesInfo.findIndex(f => f.key === state.thumbnailKey)
+        : filesInfo.findIndex(f => f.isImage)
+
+      const assetPostInfos = filesInfo.map((fileInfo, idx) => {
+        const baseAsset = !isAuto && state.assets[0] ? state.assets[0] : null
         return {
           ...baseAsset,
           file_info: [
             {
-              originalname: file.name,
-              is_thumbnail: 0,
+              originalname: fileInfo.file.name,
+              is_thumbnail: idx === thumbnailIdx ? 1 : 0,
               variation_id: 0,
             },
           ],
@@ -335,7 +441,7 @@ export const useUploaderStore = create<UploaderState>()(set => ({
           uploader_name: baseAsset?.uploader_name ?? '',
           uploader_contact_number: baseAsset?.uploader_contact_number ?? '',
           uploader_email: baseAsset?.uploader_email ?? '',
-          is_owner: baseAsset?.is_owner ?? 0,
+          is_owner: baseAsset?.is_owner ?? 1,
           owner_name: baseAsset?.owner_name ?? '',
           owner_email: baseAsset?.owner_email ?? '',
           agency_name: baseAsset?.agency_name ?? '',
@@ -343,31 +449,27 @@ export const useUploaderStore = create<UploaderState>()(set => ({
           copyright: baseAsset?.copyright ?? '',
           tags_list: baseAsset?.tags_list ?? [],
           properties_list: baseAsset?.properties_list ?? [],
+          product_models: baseAsset?.product_models ?? [],
         }
       })
 
-      const filesInfo = files.map(file => ({
-        key: Date.now() + Math.floor(Math.random() * 1000),
-        file,
-        url: URL.createObjectURL(file),
-        isImage: file.type.startsWith('image/'),
-        is_thumbnail: 0,
-        variation_id: null,
-        asset_file_id: 0,
+      const updatedFilesInfo = filesInfo.map((f, idx) => ({
+        ...f,
+        is_thumbnail: idx === thumbnailIdx ? 1 : 0,
       }))
-      let newPanelData: AssetRefsResponse[] = []
 
+      let newPanelData: AssetRefsResponse[] = []
       if (state.basePanelData) {
         const base = isAuto
           ? structuredClone(state.basePanelData)
           : structuredClone(state.panelData?.[0] ?? state.basePanelData)
-
         newPanelData = files.map(() => structuredClone(base))
       }
 
       return {
+        thumbnailKey,
         assets: [...state.assets, ...assetPostInfos],
-        files: [...state.files, ...filesInfo],
+        files: [...state.files, ...updatedFilesInfo],
         panelData: [...(state.panelData || []), ...newPanelData],
       }
     }),
@@ -378,13 +480,16 @@ export const useUploaderStore = create<UploaderState>()(set => ({
 
       const updatedAssets = isAuto
         ? state.assets.map((asset, index) => (index === currentIndex ? updatedAsset : asset))
-        : state.assets.map(() => ({ ...updatedAsset }))
+        : state.assets.map(asset => ({
+            ...updatedAsset,
+            file_info: asset.file_info,
+          }))
 
       return {
         assets: updatedAssets,
       }
     }),
-  clearAssets: () => set({ assets: [], currentAsset: null, updatedType: null, files: [] }),
+  clearAssets: () => set({ assets: [], updatedType: null, files: [], panelData: [], thumbnailKey: null }),
 
   removeAsset: (index?: number) =>
     set(state => {

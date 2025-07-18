@@ -30,7 +30,7 @@ const SettingCollectionHeader = () => {
             <Space>
               <SearchBar placeholder='Search...' onChange={handleSearchChange} />
               <Button icon={<PlusOutlined />} color='primary' variant='solid' onClick={handleAddNew}>
-                New collection
+                New Collection Tag
               </Button>
             </Space>
           </>

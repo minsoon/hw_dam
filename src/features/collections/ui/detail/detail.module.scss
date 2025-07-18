@@ -8,9 +8,10 @@
 .shareContainer {
   display: grid;
   width: 100%;
+  height: 100%;
   min-width: $min-width;
+  min-height: calc(100vh - 65px);
   padding-bottom: 40px;
-  height: calc(100vh - 65px);
   grid-template-rows: 68px auto;
   grid-template-columns: 1fr min($min-width, 100%) 1fr;
   align-items: start;
@@ -48,7 +49,7 @@
   .assetGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 16px;
+    gap: 15px;
   }
 }
 

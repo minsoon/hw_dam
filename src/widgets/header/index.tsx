@@ -13,18 +13,9 @@ import {
   TagOutlined,
   UploadOutlined,
 } from '@ant-design/icons'
+import { useAuth } from '@/shared/contexts/AuthContext'
 import styles from './header.module.scss'
 
-const userItems: MenuProps['items'] = [
-  {
-    key: 'profile',
-    label: <a href='/profile'>Use profile</a>,
-  },
-  {
-    key: 'logout',
-    label: <a href='/logout'>Logout</a>,
-  },
-]
 const settingItems: MenuProps['items'] = [
   {
     key: 'collection',
@@ -76,23 +67,48 @@ const settingItems: MenuProps['items'] = [
 export const Header = () => {
   const pathname = usePathname()
   const router = useRouter()
+  const { user, signOut } = useAuth()
+
   const navItems = [
     { path: '/', label: 'Home', exact: true },
     { path: '/assets', label: 'Assets' },
     { path: '/collections', label: 'Collections' },
   ]
+
   const isActive = (item: { path: string; exact?: boolean }) => {
     if (item.exact) {
       return pathname === item.path
     }
     return pathname.startsWith(item.path)
   }
+
+  const handleLogout = () => {
+    signOut()
+  }
+
+  const userItems: MenuProps['items'] = [
+    {
+      key: 'profile',
+      label: <a href='https://login.hanwhavision.com/realms/hanwha/account'>Account settings</a>,
+    },
+    {
+      key: 'logout',
+      label: (
+        <a onClick={handleLogout} style={{ cursor: 'pointer' }}>
+          Logout
+        </a>
+      ),
+    },
+  ]
+
   return (
     <header className={styles.header}>
       <div className={styles.box}>
         <h1>
           <Link href='/'>
-            <Image src='/images/logo-text.svg' alt='logo' width={168} height={32} />
+            <div className={styles.logo}>
+              <Image src='/images/logo-text.svg' alt='logo' fill sizes='33vw' priority />
+            </div>
             <p>DAM Version 1.0</p>
           </Link>
         </h1>
@@ -101,7 +117,9 @@ export const Header = () => {
           <ul>
             {navItems.map(item => (
               <li key={item.path} className={isActive(item) ? styles.on : ''}>
-                <Link href={item.path}>{item.label}</Link>
+                <Link href={item.path} prefetch={true}>
+                  {item.label}
+                </Link>
               </li>
             ))}
           </ul>
@@ -137,7 +155,7 @@ export const Header = () => {
             className={styles.user}
             overlayClassName={styles.userDropdown}
           >
-            <Avatar size='large'>H</Avatar>
+            <Avatar size='large'>{user?.user_name?.slice(0, 1).toUpperCase()}</Avatar>
           </Dropdown>
         </div>
       </div>

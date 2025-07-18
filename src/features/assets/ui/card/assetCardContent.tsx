@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Skeleton } from 'antd'
+import { Image } from 'antd'
 import { EyeInvisibleOutlined } from '@ant-design/icons'
 import { AssetListDataResponse } from '@/entities/types/Assets'
 import { MainAssetsList } from '@/entities/types/Main'
@@ -10,18 +12,36 @@ export const AssetCardContent: React.FC<{ item: AssetListDataResponse | MainAsse
   notLink,
 }) => {
   const router = useRouter()
+  const [imgError, setImgError] = useState(false)
+
   const handleClick = () => {
     if (notLink) return
-    router.push(`/assets/${item.asset_id}`)
+    router.push(`/assets/${item.id_title}`)
   }
 
   return (
     <div className={`${styles.cardLink} ${notLink ? styles.notLink : ''}`} onClick={handleClick}>
       <div>
         {item.thumbnail ? (
-          <p className={styles.image} style={{ backgroundImage: `url(${item.thumbnail})` }}></p>
+          <div className={styles.image}>
+            {!imgError ? (
+              <Image
+                src={item.thumbnail}
+                alt={item.asset_name || 'Asset thumbnail'}
+                onError={() => setImgError(true)}
+                placeholder={
+                  <div className={styles.imageSkeleton}>
+                    <Skeleton.Image active />
+                  </div>
+                }
+                preview={false}
+              />
+            ) : (
+              <div className={styles.notImage} />
+            )}
+          </div>
         ) : (
-          <p className={styles.notImage}></p>
+          <div className={styles.notImage}></div>
         )}
       </div>
       <dl>

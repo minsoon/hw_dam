@@ -24,14 +24,23 @@
     }
   }
   .image {
-    width: 242px;
-    height: 136px;
-    background: no-repeat center center / cover;
+    position: relative;
+    img {
+      width: 242px;
+      height: 136px;
+      object-fit: cover;
+    }
   }
   .notImage {
     width: 242px;
     height: 136px;
-    background: $bg-surface-200 url('/images/not_image.png') no-repeat center center / 20% auto;
+    background: url('/images/logo-default.png') no-repeat center center / 20% auto;
+  }
+  .imageSkeleton {
+    :global(.ant-skeleton-image) {
+      width: 242px !important;
+      height: 136px !important;
+    }
   }
   p {
     img {
@@ -165,6 +174,21 @@
       }
     }
   }
+  .download {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    button {
+      width: 32px;
+      height: 32px;
+      border-right: 1px solid $border-light;
+      border-radius: 4px;
+      background-color: $bg-surface-100;
+      :global(.anticon) {
+        font-size: 16px;
+      }
+    }
+  }
   &:hover {
     .ritBtn {
       display: flex;
@@ -206,14 +230,29 @@
     }
   }
   .image {
-    width: 120px;
-    height: 68px;
-    background: no-repeat center center / cover;
+    position: relative;
+    img {
+      width: 120px;
+      height: 68px;
+    }
   }
+
   .notImage {
     width: 120px;
     height: 68px;
-    background: $bg-surface-200 url('/images/not_image.png') no-repeat center center / 30% auto;
+    background: url('/images/logo-default.png') no-repeat center center / 30% auto;
+  }
+
+  .imageSkeleton {
+    :global(.ant-skeleton-image) {
+      width: 120px !important;
+      height: 68px !important;
+      border-radius: 0 !important;
+    }
+    :global(.ant-skeleton-image-svg) {
+      width: 30px !important;
+      height: 30px !important;
+    }
   }
   dl {
     padding-left: 16px;

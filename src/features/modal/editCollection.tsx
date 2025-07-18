@@ -152,7 +152,7 @@ export const ModalEditCollection = ({
             Cancel
           </Button>
           <Button key='submit' type='primary' htmlType='submit' disabled={!isFormValid}>
-            Create
+            Save
           </Button>
         </div>
       </Form>

@@ -13,15 +13,23 @@
     h1 {
       margin: 0;
       position: relative;
+      top: -5px;
       display: flex;
       align-items: center;
       font-size: $font-footnote-primary;
       font-weight: $font-weight-normal;
       line-height: $line-height-sm;
-      color: $text-secondary;
+      a {
+        color: $text-secondary;
+      }
+      .logo {
+        position: relative;
+        width: 168px;
+        height: 32px;
+      }
       p {
         position: absolute;
-        top: 22px;
+        top: 24px;
         left: 37px;
         margin: 0;
       }
@@ -83,7 +91,7 @@
 .userDropdown {
   ul {
     padding: 4px 0 !important;
-    width: 120px;
+    width: 140px;
   }
 }
 .settingDropdown {

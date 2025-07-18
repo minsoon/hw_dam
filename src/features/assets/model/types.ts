@@ -14,13 +14,15 @@ export interface AssetState {
   assetParams: AssetListRequest
   tabActiveKey: string
   filters: Filters | null
-  checkedIds: number[]
+  checkedIds: Set<number>
   pagination: {
     total: number
     currentPage: number
     totalPages: number
     limit: number
     offset: number
+    assets_count: number
+    favorite_count: number
   }
   isReady: boolean
   filterOptions: AssetRefsResponse | null
@@ -38,7 +40,7 @@ export interface AssetState {
 
 export interface Filter {
   title: string
-  data?: string[]
+  data?: number[]
   value?: string
 }
 
@@ -53,9 +55,10 @@ export interface AssetDetailState {
     file_path: string
     file_extension: string
   }
-  setCurrentVersionId: (version_id: number | null) => void
+  setCurrentVersionId: (version: number | null) => void
   setCurrentImage: (params: { file_path: string; file_extension: string }) => void
   setAsset: (assets: AssetDetailResponse) => void
+  removeCurrentImage: () => void
   removeAssetDetailStore: () => void
 }
 

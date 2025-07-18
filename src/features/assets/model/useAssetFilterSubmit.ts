@@ -10,6 +10,7 @@ export const useAssetFilterSubmit = () => {
       asset_types: '',
       tags: '',
       properties: '',
+      page: 1,
     }
     const filters = useAssetStore.getState().filters
 

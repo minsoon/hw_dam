@@ -21,7 +21,7 @@ export const settingTableConfig = {
           <div className={styles.imageTitle}>
             <div
               className={`${styles.fileImage} ${record.thumbnail ? '' : styles.notImage}`}
-              style={{ backgroundImage: `url(${record.thumbnail || '/images/not_image.png'})` }}
+              style={{ backgroundImage: `url(${record.thumbnail || '/images/logo-default.png'})` }}
             ></div>
             <dl>
               <dt>{record.asset_name}</dt>
@@ -111,7 +111,7 @@ export const settingTableConfig = {
           <div className={styles.imageTitle}>
             <div
               className={`${styles.fileImage} ${record.tbl_files[0]?.file_path ? '' : styles.notImage}`}
-              style={{ backgroundImage: `url(${record.tbl_files[0]?.file_path || '/images/not_image.png'})` }}
+              style={{ backgroundImage: `url(${record.tbl_files[0]?.file_path || '/images/logo-default.png'})` }}
             ></div>
             <dl>
               <dt>{record.asset_name}</dt>
@@ -160,7 +160,7 @@ export const settingTableConfig = {
                   key={index}
                   className={`${record.thumbnails?.[index] ? '' : styles.notImage}`}
                   style={{
-                    backgroundImage: `url(${record.thumbnails?.[index] || '/images/not_image.png'})`,
+                    backgroundImage: `url(${record.thumbnails?.[index] || '/images/logo-default.png'})`,
                   }}
                 ></p>
               ))}

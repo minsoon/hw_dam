@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button, Form, Input, Modal, message } from 'antd'
 import { useDeleteCollectionMutation } from '@/features/collections/model/useCollectionQuery'
 import { useCollectionStore } from '../collections/model/collectionStore'
@@ -9,12 +10,15 @@ export const ModalDeleteCollection = ({
   onClose,
   refetch,
   collectionIds,
+  isBack,
 }: {
   isOpen: boolean
   onClose: () => void
   refetch: () => void
   collectionIds: number[] | number
+  isBack?: boolean
 }) => {
+  const router = useRouter()
   const [form] = Form.useForm()
   const [isFormValid, setIsFormValid] = useState(false)
   const { checkedIds, setChecked } = useCollectionStore()
@@ -29,9 +33,13 @@ export const ModalDeleteCollection = ({
     const isArray = Array.isArray(collectionIds)
     deleteCollection(isArray ? collectionIds.join(',') : String(collectionIds), {
       onSuccess: () => {
-        refetch()
+        if (isBack) {
+          router.push('/collections')
+        } else {
+          refetch()
+        }
         handleClose()
-        const isSingleCheckedId = !isArray && checkedIds.length === 1 && checkedIds[0] === collectionIds
+        const isSingleCheckedId = !isArray && checkedIds.size === 1 && checkedIds.has(Number(collectionIds))
         if (isArray || isSingleCheckedId) {
           setChecked([])
         }
@@ -40,7 +48,7 @@ export const ModalDeleteCollection = ({
         message.error('Failed to delete collection')
       },
     })
-  }, [refetch, handleClose, collectionIds, deleteCollection, setChecked, checkedIds])
+  }, [refetch, handleClose, collectionIds, deleteCollection, setChecked, checkedIds, isBack, router])
 
   const handleFieldsChange = useCallback(() => {
     const values = form.getFieldsValue()
